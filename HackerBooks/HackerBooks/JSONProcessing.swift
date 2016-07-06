@@ -46,8 +46,7 @@ func decode(book json: JSONDictionary) throws  -> Book {
     }
     
     guard let pdfString = json["pdf_url"] as? String,
-        pdfURL = NSURL(string: pdfString),
-        pdf = NSData(contentsOfURL: pdfURL)   else{
+        pdfURL = NSURL(string: pdfString)   else{
             throw   BookErrors.wrongJSONFormat
     }
     
@@ -66,7 +65,7 @@ func decode(book json: JSONDictionary) throws  -> Book {
         throw BookErrors.wrongJSONFormat
     }
     
-    return Book(authors: aut, image_url: image, pdf_url: pdf, tags: tag, title: title, isFavourite: false)
+    return Book(authors: aut, image_url: image, pdf_url: pdfURL, tags: tag, title: title, isFavourite: false)
 }
 
 func decode(book  json: JSONDictionary?) throws -> Book{

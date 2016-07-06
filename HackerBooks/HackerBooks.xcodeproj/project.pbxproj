@@ -21,6 +21,8 @@
 		131A750B1D2AE04000CBC77C /* books_readable (1).json in Resources */ = {isa = PBXBuildFile; fileRef = 131A750A1D2AE04000CBC77C /* books_readable (1).json */; };
 		138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D135E1D2D6D16003CFE75 /* BookViewController.swift */; };
 		138D13611D2D6D16003CFE75 /* BookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138D135F1D2D6D16003CFE75 /* BookViewController.xib */; };
+		138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D13621D2D8485003CFE75 /* PdfViewController.swift */; };
+		138D13651D2D8485003CFE75 /* PdfViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138D13631D2D8485003CFE75 /* PdfViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		131A750A1D2AE04000CBC77C /* books_readable (1).json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "books_readable (1).json"; sourceTree = "<group>"; };
 		138D135E1D2D6D16003CFE75 /* BookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookViewController.swift; sourceTree = "<group>"; };
 		138D135F1D2D6D16003CFE75 /* BookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookViewController.xib; sourceTree = "<group>"; };
+		138D13621D2D8485003CFE75 /* PdfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfViewController.swift; sourceTree = "<group>"; };
+		138D13631D2D8485003CFE75 /* PdfViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PdfViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +178,8 @@
 			children = (
 				138D135E1D2D6D16003CFE75 /* BookViewController.swift */,
 				138D135F1D2D6D16003CFE75 /* BookViewController.xib */,
+				138D13621D2D8485003CFE75 /* PdfViewController.swift */,
+				138D13631D2D8485003CFE75 /* PdfViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -285,6 +291,7 @@
 				131A74D81D2AB79100CBC77C /* LaunchScreen.storyboard in Resources */,
 				131A74D51D2AB79100CBC77C /* Assets.xcassets in Resources */,
 				138D13611D2D6D16003CFE75 /* BookViewController.xib in Resources */,
+				138D13651D2D8485003CFE75 /* PdfViewController.xib in Resources */,
 				131A750B1D2AE04000CBC77C /* books_readable (1).json in Resources */,
 				131A74D31D2AB79100CBC77C /* Main.storyboard in Resources */,
 			);
@@ -314,6 +321,7 @@
 				131A75071D2AC23000CBC77C /* Foundation.swift in Sources */,
 				131A74CE1D2AB79100CBC77C /* AppDelegate.swift in Sources */,
 				131A75041D2ABC4F00CBC77C /* BookErrors.swift in Sources */,
+				138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */,
 				138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */,
 				131A75021D2ABAEB00CBC77C /* JSONProcessing.swift in Sources */,
 				131A74FE1D2AB80F00CBC77C /* Book.swift in Sources */,

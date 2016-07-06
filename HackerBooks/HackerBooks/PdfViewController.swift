@@ -1,5 +1,5 @@
 //
-//  BookViewController.swift
+//  PdfViewController.swift
 //  HackerBooks
 //
 //  Created by jro on 06/07/16.
@@ -8,29 +8,12 @@
 
 import UIKit
 
-class BookViewController: UIViewController {
+class PdfViewController: UIViewController {
     
-    
-    //MARK: - Properties
     let model : Book
     
-    @IBOutlet weak var coverPdf: UIImageView!
+    @IBOutlet weak var pdfView: UIWebView!
     
-    @IBOutlet weak var titlePdf: UITextField!
-    
-    @IBOutlet weak var authorsPdf: UITextField!
-    
-    @IBOutlet weak var tagsPdf: UITextField!
-    
-    @IBAction func displayPDF(sender: AnyObject) {
-        
-        // Create a pdfViewController
-        let pVC = PdfViewController(model: model)
-        
-        // Push to the navigator
-        navigationController?.pushViewController(pVC, animated: true)
-    
-    }
     init(model: Book){
         self.model = model
         super.init(nibName: nil, bundle: nil)
@@ -41,23 +24,22 @@ class BookViewController: UIViewController {
     }
     
     
-    func syncWithModelView(){
+    func synchronized(){
         
-        coverPdf.image = model.image_url
-        titlePdf.text = model.title
+        let pru = NSURLRequest(URL: model.pdf_url)
         
-        let pru = model.authors.sort()
-        
-        let arryAuthors = Array(pru)
-        authorsPdf.text = arryAuthors.joinWithSeparator(",")
-        
-        let pru2 = model.tags.sort()
-        tagsPdf.text = pru2.joinWithSeparator(",")
-        
+        pdfView.loadRequest(pru)
         
     }
     
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.synchronized()
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -70,12 +52,6 @@ class BookViewController: UIViewController {
     }
     
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        syncWithModelView()
-    }
-    
     /*
     // MARK: - Navigation
 

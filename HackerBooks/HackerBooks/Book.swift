@@ -14,13 +14,13 @@ class Book{
     //MARK: - Properties
     var authors     =   Set<String>()
     var image_url   :   UIImage
-    var pdf_url     :   NSData
+    var pdf_url     :   NSURL
     var tags        =   Set<String>()
     var title       :   String
     var isFavourite  :   Bool
     
     //MARK:  Initializers
-    init(authors: Set<String>, image_url: UIImage , pdf_url: NSData, tags: Set<String>, title: String, isFavourite: Bool){
+    init(authors: Set<String>, image_url: UIImage , pdf_url: NSURL, tags: Set<String>, title: String, isFavourite: Bool){
         self.authors        = authors
         self.image_url      = image_url
         self.pdf_url        = pdf_url
@@ -32,8 +32,7 @@ class Book{
     
     convenience init?(authors: Set<String>, image_url: String , pdf_url: String, tags: Set<String>, title: String, isFavourite: Bool){
         
-        guard let pdfURL = NSURL(string: pdf_url),
-            pdf = NSData(contentsOfURL: pdfURL)else{
+        guard let pdfURL = NSURL(string: pdf_url) else{
             return nil
         }
         
@@ -44,7 +43,7 @@ class Book{
                 return nil
         }
         
-        self.init(authors: authors, image_url: image , pdf_url: pdf, tags: tags, title: title, isFavourite: false)
+        self.init(authors: authors, image_url: image , pdf_url: pdfURL, tags: tags, title: title, isFavourite: false)
     }
     
 }

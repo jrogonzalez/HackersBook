@@ -61,6 +61,13 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3BO-XD-f1C">
+                    <rect key="frame" x="124" y="363" width="59" height="30"/>
+                    <state key="normal" title="See PDF"/>
+                    <connections>
+                        <action selector="displayPDF:" destination="-1" eventType="touchUpInside" id="Va6-cf-sWy"/>
+                    </connections>
+                </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Favourite" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QdQ-sR-5DT">
                     <rect key="frame" x="322" y="289" width="171" height="21"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
