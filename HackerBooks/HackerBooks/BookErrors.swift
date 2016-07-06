@@ -7,3 +7,11 @@
 //
 
 import Foundation
+
+//MARK: JSON Errors
+enum BookErrors :   ErrorType{
+    case wrongJSONFormat
+    case nilJSONObject
+    case jsonParsingError
+    case initModelError
+}

@@ -7,3 +7,16 @@
 //
 
 import Foundation
+
+
+class Library {
+    
+    var library : [Book]
+    
+    //MARK: - Initializers
+    init(books book: [Book]){
+        self.library = book
+    }
+    
+}
+ 
