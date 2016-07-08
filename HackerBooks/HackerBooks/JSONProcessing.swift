@@ -40,8 +40,9 @@ func decode(book json: JSONDictionary) throws  -> Book {
     
     
     guard let imageString = json["image_url"] as? String,
-//        imageURL = NSURL(string: imageString),
-        image = UIImage(named: imageString)   else{
+        imageURL = NSURL(string: imageString),
+        imgData = NSData(contentsOfURL: imageURL),
+        image = UIImage(data: imgData)   else{
         throw   BookErrors.wrongJSONFormat
     }
     

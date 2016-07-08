@@ -19,6 +19,8 @@
 		131A75071D2AC23000CBC77C /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131A75061D2AC23000CBC77C /* Foundation.swift */; };
 		131A75091D2AC48600CBC77C /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131A75081D2AC48600CBC77C /* Library.swift */; };
 		131A750B1D2AE04000CBC77C /* books_readable (1).json in Resources */ = {isa = PBXBuildFile; fileRef = 131A750A1D2AE04000CBC77C /* books_readable (1).json */; };
+		137194FA1D2EBC3A0056997E /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137194F91D2EBC3A0056997E /* LibraryViewController.swift */; };
+		137194FE1D2EC5860056997E /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137194FD1D2EC5860056997E /* Tag.swift */; };
 		138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D135E1D2D6D16003CFE75 /* BookViewController.swift */; };
 		138D13611D2D6D16003CFE75 /* BookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138D135F1D2D6D16003CFE75 /* BookViewController.xib */; };
 		138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D13621D2D8485003CFE75 /* PdfViewController.swift */; };
@@ -61,6 +63,8 @@
 		131A75061D2AC23000CBC77C /* Foundation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 		131A75081D2AC48600CBC77C /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		131A750A1D2AE04000CBC77C /* books_readable (1).json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "books_readable (1).json"; sourceTree = "<group>"; };
+		137194F91D2EBC3A0056997E /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		137194FD1D2EC5860056997E /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		138D135E1D2D6D16003CFE75 /* BookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookViewController.swift; sourceTree = "<group>"; };
 		138D135F1D2D6D16003CFE75 /* BookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookViewController.xib; sourceTree = "<group>"; };
 		138D13621D2D8485003CFE75 /* PdfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 				131A75011D2ABAEB00CBC77C /* JSONProcessing.swift */,
 				131A75031D2ABC4F00CBC77C /* BookErrors.swift */,
 				131A75081D2AC48600CBC77C /* Library.swift */,
+				137194FD1D2EC5860056997E /* Tag.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -180,6 +185,7 @@
 				138D135F1D2D6D16003CFE75 /* BookViewController.xib */,
 				138D13621D2D8485003CFE75 /* PdfViewController.swift */,
 				138D13631D2D8485003CFE75 /* PdfViewController.xib */,
+				137194F91D2EBC3A0056997E /* LibraryViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -320,11 +326,13 @@
 			files = (
 				131A75071D2AC23000CBC77C /* Foundation.swift in Sources */,
 				131A74CE1D2AB79100CBC77C /* AppDelegate.swift in Sources */,
+				137194FE1D2EC5860056997E /* Tag.swift in Sources */,
 				131A75041D2ABC4F00CBC77C /* BookErrors.swift in Sources */,
 				138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */,
 				138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */,
 				131A75021D2ABAEB00CBC77C /* JSONProcessing.swift in Sources */,
 				131A74FE1D2AB80F00CBC77C /* Book.swift in Sources */,
+				137194FA1D2EBC3A0056997E /* LibraryViewController.swift in Sources */,
 				131A75091D2AC48600CBC77C /* Library.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

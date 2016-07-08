@@ -48,52 +48,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
             
-//            print(chars)
+            print(chars)
             
-            var authores = Set<String>()
-            authores.insert("Scott Chacon")
-            authores.insert("Ben Straub")
-            
-            var taggs = Set<String>()
-            taggs.insert("version control")
-            taggs.insert("Git")
-            
-            let iURL = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
-            let iPDF = "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"
+//            var authores = Set<String>()
+//            authores.insert("Scott Chacon")
+//            authores.insert("Ben Straub")
 //            
+//            var taggs = Set<String>()
+//            taggs.insert("version control")
+//            taggs.insert("Git")
+//            
+//            let iURL = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
+//            let iPDF = "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"
+//
 //            let iURL = NSURL(string: "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg")!
 //            let iPDF = NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf")!
             
             
-            //Podemos crear el modelo
-            guard let model = Book(authors: authores,
-                             image_url: iURL,
-                             pdf_url: iPDF,
-                             tags: taggs,
-                             title: "Pro Git",
-                             isFavourite: false) else{
-                                throw BookErrors.initModelError
-            }
+//            //Podemos crear el modelo
+//            guard let model = Book(authors: authores,
+//                             image_url: iURL,
+//                             pdf_url: iPDF,
+//                             tags: taggs,
+//                             title: "Pro Git",
+//                             isFavourite: false) else{
+//                                throw BookErrors.initModelError
+//            }
 
+            //Creamos el modelo
+            let model = Library(books: chars)
+            
             // crear el VC
-            let uVC = BookViewController(model: model)
+//            let uVC = BookViewController(model: model)
+            let uVC = LibraryViewController(model: model)
             
             // Lo metemos en un Nav
             let uNav = UINavigationController(rootViewController: uVC)
-//
-//            
-//            // Creamos un character view controller
-//            let charVC = CharacterViewController(model: model.character(atIndex: 0, forAffiliation: .galacticEmpire))
-//            
-//            // Lo metro dentro de un navigation
-//            let charNav = UINavigationController(rootViewController: charVC)
-//            
-//            // Creamos el splitView y le endosmos los dos nav
-//            let splitVC = UISplitViewController()
-//            splitVC.viewControllers = [uNav, charNav]
-//            
+
+            
+            // Creamos un character view controller
+            let bookVC = BookViewController(model: model.book(atIndex: 0, forTag: "git"))
+
+            // Lo metro dentro de un navigation
+            let charNav = UINavigationController(rootViewController: bookVC)
+            
+            // Creamos el splitView y le endosmos los dos nav
+            let splitVC = UISplitViewController()
+            splitVC.viewControllers = [uNav, charNav]
+            
             // Nav como root view Controller
-            window?.rootViewController = uNav
+            window?.rootViewController = splitVC
 //
 //            
 //            // asignamos delegados
