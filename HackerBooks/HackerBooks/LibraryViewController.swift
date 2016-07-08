@@ -13,6 +13,7 @@ class LibraryViewController: UITableViewController{
     
     // Array de Libros
     var model: Library
+    var delegate: LibraryViewControllerDelegate?
     
     // Array de tags con todas las distintas tematcas en
     // orden alfabetico. No puede bajo ningun concepto haber ninguno repetido
@@ -26,6 +27,20 @@ class LibraryViewController: UITableViewController{
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    
+    // MARK: - Table View Delegate
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // Averiguar cual es el personaje
+        let selectedBook = book(forIndexPath: indexPath)
+        
+        // Crear un character view Controller
+        //        let charVC = CharacterViewController(model: char)
+        
+        // Avisar al delegado
+        delegate?.libraryViewController(self, didSelectBook: selectedBook)
     }
 
 
@@ -130,14 +145,13 @@ class LibraryViewController: UITableViewController{
         return model.book(atIndex: indexPath.row, forTag: getTag(indexPath.section))
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
+}
+
+
+protocol LibraryViewControllerDelegate{
+    
+    func libraryViewController(vc: LibraryViewController, didSelectBook book: Book)
+    
+    
 }

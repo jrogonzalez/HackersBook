@@ -8,13 +8,16 @@
 
 import UIKit
 
-class PdfViewController: UIViewController {
+class PdfViewController: UIViewController, UIWebViewDelegate {
     
     let model : Book
     
     @IBOutlet weak var pdfView: UIWebView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     init(model: Book){
+        
+        
         self.model = model
         super.init(nibName: nil, bundle: nil)
     }
@@ -27,7 +30,8 @@ class PdfViewController: UIViewController {
     func synchronized(){
         
         let pru = NSURLRequest(URL: model.pdf_url)
-        
+        pdfView.delegate = self
+        activityIndicator.startAnimating()
         pdfView.loadRequest(pru)
         
     }
@@ -44,6 +48,7 @@ class PdfViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        activityIndicator.stopAnimating()
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,6 +56,12 @@ class PdfViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    func webViewDidFinishLoad(webView: UIWebView) {
+        activityIndicator.stopAnimating()
+        
+        activityIndicator.hidden = true
+    }
 
     /*
     // MARK: - Navigation

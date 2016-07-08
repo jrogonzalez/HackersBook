@@ -12,7 +12,7 @@ class BookViewController: UIViewController {
     
     
     //MARK: - Properties
-    let model : Book
+    var model : Book
     
     @IBOutlet weak var coverPdf: UIImageView!
     
@@ -86,4 +86,17 @@ class BookViewController: UIViewController {
     }
     */
 
+}
+
+
+extension BookViewController: LibraryViewControllerDelegate{
+    
+    
+    func libraryViewController(vc: LibraryViewController, didSelectBook book: Book){
+        // Actualizamos el modelo
+        model = book
+        
+        // Sincronizamos las vistas con el nuevo modelo
+        syncWithModelView()
+    }
 }

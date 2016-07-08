@@ -98,12 +98,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             // Nav como root view Controller
             window?.rootViewController = splitVC
-//
-//            
-//            // asignamos delegados
-//            uVC.delegate = charVC
-//            
-//            
+
+            
+            // asignamos delegados
+            uVC.delegate = bookVC
+            
+            
             // Mostramos la window
             window?.makeKeyAndVisible()
             
