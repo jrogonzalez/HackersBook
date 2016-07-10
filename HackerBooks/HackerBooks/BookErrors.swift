@@ -14,4 +14,6 @@ enum BookErrors :   ErrorType{
     case nilJSONObject
     case jsonParsingError
     case initModelError
+    case resourceURLNotReachable
+    case bookNotFound
 }

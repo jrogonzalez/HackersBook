@@ -14,6 +14,9 @@ class LibraryViewController: UITableViewController{
     // Array de Libros
     var model: Library
     var delegate: LibraryViewControllerDelegate?
+    let lastBook = "lastBook"
+    let lastRow = "lastRow"
+    let lastSection = "lastSection"
     
     // Array de tags con todas las distintas tematcas en
     // orden alfabetico. No puede bajo ningun concepto haber ninguno repetido
@@ -21,7 +24,7 @@ class LibraryViewController: UITableViewController{
     
     init(model: Library){
         self.model = model
-        self.tags = self.model.obtainTagsForLibrary(model.bookList)
+        self.tags = self.model.obtainSectionForLibraryDict(model.bookList)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -41,6 +44,8 @@ class LibraryViewController: UITableViewController{
         
         // Avisar al delegado
         delegate?.libraryViewController(self, didSelectBook: selectedBook)
+        
+        saveLastBookSelectedSection(indexPath.section, row: indexPath.row)
     }
 
 
@@ -66,19 +71,31 @@ class LibraryViewController: UITableViewController{
         guard let num = tag else{
             return nil
         }
-        return model.bookList[num]
+        let aux = model.bookList[num]
+        return aux
+    }
+    
+    
+    func booksForTag (tag: Int?) -> [Book]?{
+        
+        guard let num = model.obtainSectionForRow(tag!) else{
+            return nil
+        }
+        
+        let aux = model.bookList[num]
+        return aux
     }
 
     // Un Book para que libro que esta en la posicion 'index' de aquellos bajo un cierto tag. Mira a ver si puedes usar el metodo anterior para hacer parte de tu trabajo.
     // Si el indice no existe o el tag no existe, ha de devolver nil
 
-    func bookAtIndex(index: Int?, tag: String?) -> Book?{
-        guard let aTag = tag,
+    func bookAtIndex(index: Int?, row: String?) -> Book?{
+        guard let aTag = row,
             let aIndex = index else{
             return nil
         }
                 
-        guard booksForTag(aTag)?.count == 0,
+        guard booksForTag(aTag)?.count != 0,
             let num = booksForTag(aTag) else{
             return nil
         }
@@ -86,6 +103,25 @@ class LibraryViewController: UITableViewController{
         return num[aIndex]
         
     }
+    
+    
+    func bookAtIndex(section: Int?, row: Int?) -> Book?{
+        
+        //Averiaguamos de que tag es el int que nos han mandado
+        guard let aSection = section,
+            let aRow = row else{
+                return nil
+        }
+        
+        guard booksForTag(aSection)?.count != 0,
+            let num = booksForTag(aSection) else{
+                return nil
+        }
+        
+        return num[aRow]
+        
+    }
+
     
     
     
@@ -135,7 +171,7 @@ class LibraryViewController: UITableViewController{
     
     //MARK: - Utils
     func getTag(forSection: Int) -> String{
-        let list = model.obtainTagsForLibrary(model.bookList)
+        let list = model.obtainSectionForLibraryDict(model.bookList)
         var array = Array(list)
         
         return array[forSection]
@@ -144,6 +180,55 @@ class LibraryViewController: UITableViewController{
     func book(forIndexPath indexPath: NSIndexPath)-> Book{
         return model.book(atIndex: indexPath.row, forTag: getTag(indexPath.section))
     }
+    
+    //MARK: - NSUserDefaults methods
+    
+    func lastSelectedBook() throws -> Book?{
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        // si no existe el ultimo libro seleccionado inicializamos uno
+        if defaults.objectForKey(lastBook) == nil {
+            self.defaultBook()
+        }
+        
+        let bookSelected = defaults.objectForKey(lastBook)
+        
+        //sacamos las coordenadas del NSUserDefaults
+        let row = Int((bookSelected![lastRow] as? String)!)
+        let section = Int((bookSelected![lastSection] as? String)!) //Hacems un Int del String
+        
+        guard let book = bookAtIndex(section, row: row) else{
+            throw BookErrors.bookNotFound
+        }
+        
+        return book
+        
+        
+    }
+    
+    func defaultBook(){
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject([lastSection: "1", lastRow: "0"], forKey: lastBook)
+//        defaults.setObject(model.obtainFirstTag()!, forKey: lastRow)
+//        defaults.setInteger(0, forKey: lastSection)
+        
+//        defaults.setObject(model.book(atIndex: 0, forTag: model.obtainFirstTag()!), forKey: lastBook)
+//        defaults.setObject(model.obtainFirstTag()!, forKey: lastRow)
+//        defaults.setInteger(0, forKey: lastSection)
+        
+//        return bookAtIndex(0, tag: model.obtainFirstTag()!)
+        
+        
+    }
+    
+    func saveLastBookSelectedSection(section: Int, row: Int){
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject([lastSection: String(section), lastRow: String(row)], forKey: lastBook)
+        
+    }
+        
     
 
 }
