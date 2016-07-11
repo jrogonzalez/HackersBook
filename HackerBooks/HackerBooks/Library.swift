@@ -19,14 +19,20 @@ class Library {
     //MARK: - Properties
     var bookList : BookDictionary = BookDictionary()
     
+    var tags : Tag?
+    
     //MARK: - Initializers
     init(books: BookArray, orderedAlphabetically: Bool){
      
+        let defaults = NSUserDefaults.standardUserDefaults()
         if (orderedAlphabetically){
             //Creamos un nuevo diccionario vacio
             let sorted = books.sort {$0.title < $1.title}
             
             bookList = makeOneSectionEmptyLibrary()
+            
+            
+            defaults.setObject(["lastSection": "0", "lastRow": "0"], forKey: "lastBook")
             
             //Recorremos el array de libros para irlos añadiendo
             for each in sorted{
@@ -36,11 +42,11 @@ class Library {
         } else {
             //Creamos un nuevo diccionario vacio
             bookList = makeEmptyLibrary(obtainSectionForLibrary(books))
-            
+            defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
             
             //Recorremos el array de libros para irlos añadiendo
             for each in books{
-                for each2 in each.tags{
+                for each2 in each.tags.tagToOrderArray(){
                     bookList[each2]?.append(each)
                 }
             }
@@ -66,31 +72,54 @@ class Library {
         return num
     }
     
-    func book(atIndex index: Int,
-                           forTag tag: String) -> Book{
+    func book(forSection section: String, atRow row: Int
+                           ) -> Book{
         
         // el personaje nº index en el tag introducido
-        let chars = bookList[tag]!
-        let char = chars[index]
+        let chars = bookList[section]!
+        let char = chars[row]
         
         return char
         
         
     }
     
-    func book(atIndex index: Int,
-                      forTag tag: Int) throws -> Book?{
+    func book(forSection section: Int, atRow row: Int) -> Book?{
         
-        //Obtengo el tag de esa fila
-        guard let tagRow = obtainSectionForRow(tag) else{
-            throw BookErrors.bookNotFound
+        
+        if bookList["favourite"]?.count == 0 {
+            //Obtengo el tag de esa fila
+            guard let bookSection = obtainSection(section) else{
+                return nil
+            }
+            
+            guard let  bookRow = bookList[bookSection] else{
+                return nil
+            }
+            
+            return bookRow[row]
+        }else if bookList["favourite"]?.count > 0{
+            guard let  bookRow = bookList["favourite"] else{
+                return nil
+            }
+            
+            return bookRow[row]
+        } else{
+            //Obtengo el tag de esa fila
+            guard let bookSection = obtainSection(section) else{
+                return nil
+            }
+            
+            guard let  bookRow = bookList[bookSection] else{
+                return nil
+            }
+            
+            return bookRow[row]
         }
         
-        guard let bookSection = bookList[tagRow] else{
-            throw BookErrors.bookNotFound
-        }
         
-        return bookSection[index]
+        
+        
     }
 
     
@@ -99,13 +128,14 @@ class Library {
     func makeEmptyLibrary(tags: Tag) -> BookDictionary {
         
         var d = BookDictionary()
-        let array = Array(tags.tags)
+        let array = Array(tags.tags.sort())
         
         //Creamos el tag de vavoritos
         d["Favourite"] = BookArray()
         
         for each in array{
             d[each]  =   BookArray()
+            tags.tags.insert(each)
         }
         
         return d
@@ -125,7 +155,7 @@ class Library {
     func obtainSectionForLibrary(books:BookArray)-> Tag{
         let tags = Tag(tags: Set<String>())
         for each in books{
-            let array = Array(each.tags)
+            let array = Array(each.tags.tags.sort())
             for each in array{
                 tags.tags.insert(each.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
             }
@@ -139,7 +169,7 @@ class Library {
         var tags = Set<String>()
         for (_, value) in books{
             for book in value{
-                let array = Array(book.tags)
+                let array = Array(book.tags.tags)
                 for each in array{
                     tags.insert(each.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
                 }
@@ -169,13 +199,15 @@ class Library {
     }
     
     
-    func obtainSectionForRow(row: Int) -> String?{
+    func obtainSection(section: Int) -> String?{
 //        let tags = obtainSectionForLibrary(bookList)
         let tags = obtainSectionForLibraryDict(bookList)
-        let arrayTags = Array(tags)
-        return arrayTags[row]
+        let arrayTags = Array(tags.sort())
+        return arrayTags[section]
         
     }
+    
+    
     
 //    func orderFotTagRow() -> String?{
 //        let tags = obtainTagsForLibrary(bookList)

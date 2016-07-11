@@ -78,7 +78,7 @@ class LibraryViewController: UITableViewController{
     
     func booksForTag (tag: Int?) -> [Book]?{
         
-        guard let num = model.obtainSectionForRow(tag!) else{
+        guard let num = model.obtainSection(tag!) else{
             return nil
         }
         
@@ -134,8 +134,14 @@ class LibraryViewController: UITableViewController{
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //Numero de libros en un determinado tag
+        let sectionName = getTag(section)
         
-        return model.booksCount(forTag: getTag(section))
+        let num = model.booksCount(forTag: sectionName)
+        
+        
+        print("section: \(section) nº books: \(num) --> \(sectionName)")
+        
+        return num
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -144,9 +150,13 @@ class LibraryViewController: UITableViewController{
         let cellId = "BookCell"
         
         
+        print("section: \(indexPath.section)")
+        print("row: \(indexPath.row)")
         
         // Averiguar de que personaje me estan preguntando
         let theBook = book(forIndexPath: indexPath)
+        let sectionName = getTag(indexPath.section)
+        print("tag: \(sectionName)")
         
         // Crear la celda
         var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
@@ -159,6 +169,7 @@ class LibraryViewController: UITableViewController{
         // Sincronizar personaje -> celda
         cell?.imageView?.image = theBook.image_url
         cell?.textLabel?.text = theBook.title
+    
 //        cell?.detailTextLabel?.text = theBook.
         
         return cell!
@@ -172,13 +183,13 @@ class LibraryViewController: UITableViewController{
     //MARK: - Utils
     func getTag(forSection: Int) -> String{
         let list = model.obtainSectionForLibraryDict(model.bookList)
-        var array = Array(list)
-        
-        return array[forSection]
+        var array = Array(list.sort())
+        let sal = array[forSection]
+        return sal
     }
     
     func book(forIndexPath indexPath: NSIndexPath)-> Book{
-        return model.book(atIndex: indexPath.row, forTag: getTag(indexPath.section))
+        return try model.book(forSection: indexPath.section, atRow: indexPath.row)!
     }
     
     //MARK: - NSUserDefaults methods

@@ -51,7 +51,7 @@ class BookViewController: UIViewController {
         let arryAuthors = Array(pru)
         authorsPdf.text = arryAuthors.joinWithSeparator(",")
         
-        let pru2 = model.tags.sort()
+        let pru2 = model.tags.tags.sort()
         tagsPdf.text = pru2.joinWithSeparator(",")
         
         

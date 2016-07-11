@@ -56,10 +56,12 @@ func decode(book json: JSONDictionary) throws  -> Book {
     }
     
     let tagArray = tags.componentsSeparatedByString(",")
-    var tag = Set<String>()
+    
+    var tagSet = Set<String>()
     for each in tagArray{
-        tag.insert(each.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
+        tagSet.insert(each.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
     }
+    let tag = Tag(tags: tagSet)
     
     
     guard let title = json["title"] as? String else{
@@ -107,6 +109,69 @@ func loadFromRemoteFile(fileURL name: String, bundle: NSBundle = NSBundle.mainBu
     }else{
         throw BookErrors.jsonParsingError
     }
+}
+
+func readJSON() throws -> [Book]{
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
+    let fm = NSFileManager.defaultManager()
+    let url = fm.URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last!
+    let fich = url.URLByAppendingPathComponent("books.txt")
+    print(fich)
+    
+    var json : JSONArray = JSONArray()
+    
+    
+    var directory: ObjCBool = ObjCBool(false)
+    var exists: Bool = NSFileManager.defaultManager().fileExistsAtPath(fich.absoluteString, isDirectory: &directory)
+    
+    if exists && Bool(directory) {
+        // Exists. Directory.
+    } else if exists {
+        let dataLoad: NSData? = NSData(contentsOfFile: fich.absoluteString)
+    } else{
+        do{
+            let urlHackerBooks = "https://t.co/K9ziV0z3SJ"
+            let urlJSON = NSURL(string: urlHackerBooks)
+            
+            let data = NSData(contentsOfURL: urlJSON!)
+            try  data?.writeToURL(fich, options: NSDataWritingOptions.AtomicWrite)
+            
+            defaults.setObject(urlHackerBooks, forKey: "JSON_Data")
+            
+            
+            //        let defaults = NSUserDefaults.standardUserDefaults()
+            guard let nombre = defaults.stringForKey("JSON_Data") else{
+                return [Book]()
+            }
+            
+            //            let json = try loadFromLocalFile(fileName: "books_readable.json")
+            json = try loadFromRemoteFile(fileURL: nombre)
+            
+            
+            
+            
+        }catch{
+            throw BookErrors.wrongJSONFormat
+        }
+
+    }
+   
+    
+    var chars = [Book]()
+    for dict in json{
+        do{
+            let char = try decode(book: dict)
+            chars.append(char)
+        }catch{
+            print("error al procesar \(dict)")
+        }
+    }
+    
+    return chars
+    
+    
+    
 }
 
 

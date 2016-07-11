@@ -16,6 +16,15 @@ class Tag: Equatable, Hashable{
         self.tags = tags
     }
     
+    
+    //MARK: - Array
+    func tagToOrderArray()->[String]{
+        var auxArray : [String] = Array(tags)
+        auxArray.sortInPlace()
+        return auxArray
+    }
+    
+    
     //MARK: - Proxies
     var proxyForComparison : String{
         get{

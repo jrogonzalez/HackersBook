@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let urlHackerBooks = "https://t.co/K9ziV0z3SJ"
+    
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -22,67 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // crear instancia de modelo
         do{
+            let chars = try readJSON()
             
-            
-//            try? downloadJSON()
-            
-            
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            defaults.setObject(urlHackerBooks, forKey: "JSON_Data")
-            
-            
-            //        let defaults = NSUserDefaults.standardUserDefaults()
-            guard let nombre = defaults.stringForKey("JSON_Data") else{
-              return Bool(false)
-            }
-            
-//            let json = try loadFromLocalFile(fileName: "books_readable.json")
-            let json = try loadFromRemoteFile(fileURL: nombre)
-            
-                      
-            //json.appendContentsOf(try loadFromLocalFile(fileName: "forceSensitives.json"))
-//            print(json)
-            
-            var chars = [Book]()
-            for dict in json{
-                do{
-                    let char = try decode(book: dict)
-                    chars.append(char)
-                }catch{
-                    print("error al procesar \(dict)")
-                }
-            }
-//            
-//            print(chars)
-            
-//            var authores = Set<String>()
-//            authores.insert("Scott Chacon")
-//            authores.insert("Ben Straub")
-//            
-//            var taggs = Set<String>()
-//            taggs.insert("version control")
-//            taggs.insert("Git")
-//            
-//            let iURL = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
-//            let iPDF = "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"
-//
-//            let iURL = NSURL(string: "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg")!
-//            let iPDF = NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf")!
-//            
-//            
-//            //Podemos crear el modelo
-//            guard let model = Book(authors: authores,
-//                             image_url: iURL,
-//                             pdf_url: iPDF,
-//                             tags: taggs,
-//                             title: "Pro Git",
-//                             isFavourite: false) else{
-//                                throw BookErrors.initModelError
-//            }
-            
-            let ordenAlfabetico : Bool = false
+            let ordenAlfabetico : Bool = true
 
             //Creamos el modelo
             let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)
@@ -150,25 +92,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func downloadJSON() throws {
-        // obtener el directorio Documents donde se guardará la caché
-        let fm = NSFileManager.defaultManager()
-        let urls = fm.URLsForDirectory(NSSearchPathDirectory.DocumentDirectory,
-                                       inDomains: NSSearchPathDomainMask.UserDomainMask)
-        let urlDir = urls.last!
-        
-        // descargar el fichero JSON
-        guard let urlSrc = NSURL(string: urlHackerBooks) else {
-            throw BookErrors.resourceURLNotReachable
-        }
-        
-        let request = NSURLRequest(URL: urlSrc)
-        var response: NSURLResponse?
-        let data = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
-        
-        // guardar el JSON en la cache
-        data.writeToURL(urlDir, atomically: true)
-    }
+//    func downloadJSON() throws {
+//        // obtener el directorio Documents donde se guardará la caché
+//        let fm = NSFileManager.defaultManager()
+//        let urls = fm.URLsForDirectory(NSSearchPathDirectory.DocumentDirectory,
+//                                       inDomains: NSSearchPathDomainMask.UserDomainMask)
+//        let urlDir = urls.last!
+//        
+//        // descargar el fichero JSON
+//        guard let urlSrc = NSURL(string: urlHackerBooks) else {
+//            throw BookErrors.resourceURLNotReachable
+//        }
+//        
+//        let request = NSURLRequest(URL: urlSrc)
+//        var response: NSURLResponse?
+//        let data = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
+//        
+//        // guardar el JSON en la cache
+//        data.writeToURL(urlDir, atomically: true)
+//    }
 
 
 }
