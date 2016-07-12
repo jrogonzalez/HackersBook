@@ -13,6 +13,8 @@ class BookViewController: UIViewController {
     
     //MARK: - Properties
     var model : Book
+    var favourite : Bool = false
+    var delegate: BookViewControllerDelegate?
     
     @IBOutlet weak var coverPdf: UIImageView!
     
@@ -21,6 +23,10 @@ class BookViewController: UIViewController {
     @IBOutlet weak var authorsPdf: UITextField!
     
     @IBOutlet weak var tagsPdf: UITextField!
+    
+    @IBOutlet weak var emptyStar: UIImageView!
+    
+    @IBOutlet weak var filledStar: UIImageView!
     
     @IBAction func displayPDF(sender: AnyObject) {
         
@@ -33,6 +39,7 @@ class BookViewController: UIViewController {
     }
     init(model: Book){
         self.model = model
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,10 +56,22 @@ class BookViewController: UIViewController {
         let pru = model.authors.sort()
         
         let arryAuthors = Array(pru)
-        authorsPdf.text = arryAuthors.joinWithSeparator(",")
+        authorsPdf.text = arryAuthors.joinWithSeparator(", ")
         
         let pru2 = model.tags.tags.sort()
-        tagsPdf.text = pru2.joinWithSeparator(",")
+        tagsPdf.text = pru2.joinWithSeparator(", ")
+        
+        self.favourite = model.isFavourite
+        
+        if (self.favourite){
+            emptyStar.hidden = true
+            filledStar.hidden = false
+        }else{
+            emptyStar.hidden = false
+            filledStar.hidden = true
+        }
+        
+        
         
         
     }
@@ -61,7 +80,51 @@ class BookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        // create tap gesture recognizer
+        let tapGestureEmptyStar = UITapGestureRecognizer(target: self, action: "emptyStarTapped:")
+        let tapGestureFilledStar = UITapGestureRecognizer(target: self, action: "filledStarTapped:")
+        
+        // add it to the image view;
+        emptyStar.addGestureRecognizer(tapGestureEmptyStar)
+        // make sure imageView can be interacted with by user
+        emptyStar.userInteractionEnabled = true
+        
+        // add it to the image view;
+        filledStar.addGestureRecognizer(tapGestureFilledStar)
+        // make sure imageView can be interacted with by user
+        filledStar.userInteractionEnabled = true
+    }
+    
+    func emptyStarTapped(gesture: UIGestureRecognizer) {
+        // if the tapped view is a UIImageView then set it to imageview
+        // Añadimos a favoritos
+        if let emptyStar = gesture.view as? UIImageView {
+            print("Image Tapped emptyStar")
+            //Here you can initiate your new ViewController
+            emptyStar.hidden = true
+            filledStar.hidden = false
+            model.isFavourite = true
+            
+            // Avisamos al delegado
+            delegate?.bookViewController(self, didAddFavourite: model)
+            
+            
+        }
+    }
+
+    func filledStarTapped(gesture: UIGestureRecognizer) {
+        // if the tapped view is a UIImageView then set it to imageview
+        // Eliminamos de favoritos
+        if let filledStar = gesture.view as? UIImageView {
+            print("Image Tapped filledStar")
+            //Here you can initiate your new ViewController
+            filledStar.hidden = true
+            emptyStar.hidden = false
+            model.isFavourite = false
+            
+            //Avisamos al delegado
+            delegate?.bookViewController(self, didRemoveFavourite: model)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,7 +136,35 @@ class BookViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        emptyStar.image = UIImage(named: "EmptyStar.jpg")
+        filledStar.image = UIImage(named: "filledStar.png")
+        
         syncWithModelView()
+    }
+    
+    func bookDidChange(notification: NSNotification)  {
+        
+        // Sacar el userInfo
+        let info = notification.userInfo!
+        
+        // Sacar el personaje
+        let char = info[BookKey] as? Book
+        
+        // Actualizar el modelo
+        model = char!
+        
+        // Sincronizar las vistas
+        syncWithModelView()
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Baja en la notificación
+        let nc = NSNotificationCenter.defaultCenter()
+        nc.removeObserver(self)
+        
     }
     
     /*
@@ -86,6 +177,14 @@ class BookViewController: UIViewController {
     }
     */
 
+}
+
+protocol BookViewControllerDelegate{
+    
+    func bookViewController(vc: BookViewController, didAddFavourite book: Book)
+    func bookViewController(vc: BookViewController, didRemoveFavourite book: Book)
+    
+    
 }
 
 

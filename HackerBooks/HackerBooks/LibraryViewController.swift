@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 
+let BookDidChangeNotification = "Selected Book did change"
+let BookKey = "key"
+
 class LibraryViewController: UITableViewController{
     
     // Array de Libros
@@ -18,13 +21,15 @@ class LibraryViewController: UITableViewController{
     let lastRow = "lastRow"
     let lastSection = "lastSection"
     
+    
+    
     // Array de tags con todas las distintas tematcas en
     // orden alfabetico. No puede bajo ningun concepto haber ninguno repetido
     var tags : Set<String>
     
     init(model: Library){
         self.model = model
-        self.tags = self.model.obtainSectionForLibraryDict(model.bookList)
+        self.tags = self.model.obtainSectionForLibraryDict(model.bookListTags)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -32,6 +37,14 @@ class LibraryViewController: UITableViewController{
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+                
+//        self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.5
+//            green:0
+//            blue:0.13
+//            alpha:1];
+    }
     
     // MARK: - Table View Delegate
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -40,20 +53,55 @@ class LibraryViewController: UITableViewController{
         let selectedBook = book(forIndexPath: indexPath)
         
         // Crear un character view Controller
-        //        let charVC = CharacterViewController(model: char)
+        //        let charVC = CharacterViewController(model: char)
         
         // Avisar al delegado
         delegate?.libraryViewController(self, didSelectBook: selectedBook)
         
         saveLastBookSelectedSection(indexPath.section, row: indexPath.row)
+        
+        
+        // Enviamos la misma info via notificaciones
+        let nc = NSNotificationCenter.defaultCenter()
+        let notif = NSNotification(name: BookDidChangeNotification, object: self, userInfo: [BookKey:selectedBook])
+        nc.postNotification(notif)
+
     }
 
+    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        
+        if model.bookListTags["favourite"]!.count>0{
+            if section==0{
+                view.tintColor = UIColor.redColor()
+            }
+            else{
+                view.tintColor = UIColor(red: 0.5, green: 0, blue: 0.13, alpha: 1)
+            }
+        }
+        else{
+            view.tintColor = UIColor(red: 0.5, green: 0, blue: 0.13, alpha: 1)
+        }
+        
+        
+        
+        let title = UILabel()
+        title.textColor = UIColor.whiteColor()
+        title.textAlignment = NSTextAlignment.Left
+        
+        
+        
+        let header : UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
+        
+        header.textLabel?.textColor = title.textColor
+        header.textLabel?.textAlignment = title.textAlignment
+        
+    }
 
 
     // Numero total de libros
     var booksCount: Int {
         get{
-            let count: Int = self.model.bookList.count
+            let count: Int = self.model.bookListTags.count
             return count
         }
     }
@@ -71,7 +119,7 @@ class LibraryViewController: UITableViewController{
         guard let num = tag else{
             return nil
         }
-        let aux = model.bookList[num]
+        let aux = model.bookListTags[num]
         return aux
     }
     
@@ -82,7 +130,7 @@ class LibraryViewController: UITableViewController{
             return nil
         }
         
-        let aux = model.bookList[num]
+        let aux = model.bookListTags[num]
         return aux
     }
 
@@ -182,7 +230,7 @@ class LibraryViewController: UITableViewController{
     
     //MARK: - Utils
     func getTag(forSection: Int) -> String{
-        let list = model.obtainSectionForLibraryDict(model.bookList)
+        let list = model.obtainSectionForLibraryDict(model.bookListTags)
         var array = Array(list.sort())
         let sal = array[forSection]
         return sal
@@ -248,6 +296,29 @@ class LibraryViewController: UITableViewController{
 protocol LibraryViewControllerDelegate{
     
     func libraryViewController(vc: LibraryViewController, didSelectBook book: Book)
-    
+            
     
 }
+
+
+extension LibraryViewController: BookViewControllerDelegate{
+    
+    
+    func bookViewController(vc: BookViewController, didAddFavourite book: Book){
+        // Actualizamos el modelo
+        model.addFavorite(book)
+        
+        //sincronizamos
+        self.tableView.reloadData()
+        
+    }
+    
+    func bookViewController(vc: BookViewController, didRemoveFavourite book: Book){
+        // Actualizamos el modelo
+        model.removeFavorite(book)
+        //sincronizamos
+        self.tableView.reloadData()
+    }
+    
+}
+

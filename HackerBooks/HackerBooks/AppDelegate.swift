@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             // asignamos delegados
             uVC.delegate = bookVC
+            bookVC.delegate = uVC
             
             
             // Mostramos la window

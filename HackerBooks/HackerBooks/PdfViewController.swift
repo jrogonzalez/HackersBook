@@ -10,7 +10,7 @@ import UIKit
 
 class PdfViewController: UIViewController, UIWebViewDelegate {
     
-    let model : Book
+    var model : Book
     
     @IBOutlet weak var pdfView: UIWebView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -38,9 +38,23 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
     
     
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewWillAppear(animated)  
+        
+        // Alta en notificación
+        let nc = NSNotificationCenter.defaultCenter()
+        nc.addObserver(self, selector: #selector(bookDidChange), name: BookDidChangeNotification, object: nil)
+
         
         self.synchronized()
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Baja en la notificación
+        let nc = NSNotificationCenter.defaultCenter()
+        nc.removeObserver(self)
         
     }
     
@@ -49,6 +63,24 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
 
         // Do any additional setup after loading the view.
         activityIndicator.stopAnimating()
+    }
+    
+    func bookDidChange(notification: NSNotification)  {
+        
+        // Sacar el userInfo
+        let info = notification.userInfo!
+        
+        activityIndicator.startAnimating()
+        
+        // Sacar el personaje
+        let book = info[BookKey] as? Book
+        
+        // Actualizar el modelo
+        self.model = book!
+        
+        // Sincronizar las vistas
+        synchronized()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,6 +94,8 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
         
         activityIndicator.hidden = true
     }
+    
+    
 
     /*
     // MARK: - Navigation

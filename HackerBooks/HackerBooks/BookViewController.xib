@@ -9,6 +9,8 @@
             <connections>
                 <outlet property="authorsPdf" destination="5FS-dY-5R8" id="T4E-yI-HWL"/>
                 <outlet property="coverPdf" destination="g1X-wI-UQC" id="vx5-Pz-hr2"/>
+                <outlet property="emptyStar" destination="tHU-dh-MSh" id="KJ8-QR-Onx"/>
+                <outlet property="filledStar" destination="MkX-1Z-rWE" id="vRT-TT-kOW"/>
                 <outlet property="tagsPdf" destination="i5a-0o-lMW" id="4Ct-do-gYJ"/>
                 <outlet property="titlePdf" destination="GMd-pT-Tb9" id="kSP-yS-vKw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -82,12 +84,12 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="MkX-1Z-rWE">
-                    <rect key="frame" x="588" y="352" width="50" height="56"/>
+                    <rect key="frame" x="590" y="352" width="50" height="56"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-            <point key="canvasLocation" x="532" y="267"/>
+            <point key="canvasLocation" x="226" y="258"/>
         </view>
     </objects>
 </document>

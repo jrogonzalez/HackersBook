@@ -12,12 +12,16 @@ import UIKit
 
 class Library {
     
+    
+
+    
     //MARK: - Utility types
     typealias BookArray         = [Book]
     typealias BookDictionary    = [String: BookArray]
     
     //MARK: - Properties
-    var bookList : BookDictionary = BookDictionary()
+    var bookListTags : BookDictionary = BookDictionary()
+    var bookListAlpha : BookDictionary = BookDictionary()
     
     var tags : Tag?
     
@@ -25,39 +29,39 @@ class Library {
     init(books: BookArray, orderedAlphabetically: Bool){
      
         let defaults = NSUserDefaults.standardUserDefaults()
-        if (orderedAlphabetically){
+//        if (orderedAlphabetically){
             //Creamos un nuevo diccionario vacio
             let sorted = books.sort {$0.title < $1.title}
             
-            bookList = makeOneSectionEmptyLibrary()
+            bookListAlpha = makeOneSectionEmptyLibrary()
             
             
             defaults.setObject(["lastSection": "0", "lastRow": "0"], forKey: "lastBook")
             
             //Recorremos el array de libros para irlos añadiendo
             for each in sorted{
-                    bookList["books"]?.append(each)
+                    bookListAlpha["books"]?.append(each)
                 
             }
-        } else {
+//        } else {
             //Creamos un nuevo diccionario vacio
-            bookList = makeEmptyLibrary(obtainSectionForLibrary(books))
+            bookListTags = makeEmptyLibrary(obtainSectionForLibrary(books))
             defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
             
             //Recorremos el array de libros para irlos añadiendo
             for each in books{
                 for each2 in each.tags.tagToOrderArray(){
-                    bookList[each2]?.append(each)
+                    bookListTags[each2]?.append(each)
                 }
             }
-        }
+//        }
         
     }
     
     var tagsCount : Int{
         get{
             // indicar cuantos tags hay
-            return bookList.count
+            return bookListTags.count
         }
     }
     
@@ -65,7 +69,7 @@ class Library {
     func booksCount(forTag tag: String)-> Int{
         
         // cuantos libros hay para esta Tag?
-        guard let num = bookList[tag]?.count else{
+        guard let num = bookListTags[tag]?.count else{
             return 0
         }
         
@@ -76,7 +80,7 @@ class Library {
                            ) -> Book{
         
         // el personaje nº index en el tag introducido
-        let chars = bookList[section]!
+        let chars = bookListTags[section]!
         let char = chars[row]
         
         return char
@@ -87,37 +91,39 @@ class Library {
     func book(forSection section: Int, atRow row: Int) -> Book?{
         
         
-        if bookList["favourite"]?.count == 0 {
+        if section == 0{
+            if bookListTags["favourite"]?.count == 0 {
+                //Obtengo el tag de esa fila
+                guard let bookSection = obtainSection(section) else{
+                    return nil
+                }
+                
+                guard let  bookRow = bookListTags[bookSection] else{
+                    return nil
+                }
+                
+                return bookRow[row]
+            }else if bookListTags["favourite"]?.count > 0{
+                guard let  bookRow = bookListTags["favourite"] else{
+                    return nil
+                }
+                
+                return bookRow[row]
+            }
+        } else {
             //Obtengo el tag de esa fila
             guard let bookSection = obtainSection(section) else{
                 return nil
             }
             
-            guard let  bookRow = bookList[bookSection] else{
-                return nil
-            }
-            
-            return bookRow[row]
-        }else if bookList["favourite"]?.count > 0{
-            guard let  bookRow = bookList["favourite"] else{
-                return nil
-            }
-            
-            return bookRow[row]
-        } else{
-            //Obtengo el tag de esa fila
-            guard let bookSection = obtainSection(section) else{
-                return nil
-            }
-            
-            guard let  bookRow = bookList[bookSection] else{
+            guard let  bookRow = bookListTags[bookSection] else{
                 return nil
             }
             
             return bookRow[row]
         }
         
-        
+        return nil
         
         
     }
@@ -131,7 +137,7 @@ class Library {
         let array = Array(tags.tags.sort())
         
         //Creamos el tag de vavoritos
-        d["Favourite"] = BookArray()
+        d["favourite"] = BookArray()
         
         for each in array{
             d[each]  =   BookArray()
@@ -150,6 +156,33 @@ class Library {
         
         return d
         
+    }
+    
+    func addFavorite(book: Book){
+        bookListAlpha["favourite"]?.append(book)
+        bookListTags["favourite"]?.append(book)
+    }
+    
+    func removeFavorite(book: Book){
+        if var listAlpha = bookListAlpha["favourite"]{
+            var i = 0
+            for each in listAlpha{
+                if each.title == book.title{
+                    bookListAlpha["favourite"]?.removeAtIndex(i)
+                }
+                i += 1
+            }
+        }
+        
+        if var listTags = bookListTags["favourite"]{
+            var m = 0
+            for each in listTags{
+                if each.title == book.title{
+                    bookListTags["favourite"]?.removeAtIndex(m)
+                }
+                m += 1
+            }
+        }                
     }
     
     func obtainSectionForLibrary(books:BookArray)-> Tag{
@@ -191,7 +224,7 @@ class Library {
     }
     
     func obtainFirstSection() -> String?{
-//        let tags = obtainTagsForLibrary(bookList)
+//        let tags = obtainTagsForLibrary(bookListTags)
 //        let arrayTags = Array(tags)
 //        return arrayTags[0]
         return "1"
@@ -200,8 +233,8 @@ class Library {
     
     
     func obtainSection(section: Int) -> String?{
-//        let tags = obtainSectionForLibrary(bookList)
-        let tags = obtainSectionForLibraryDict(bookList)
+//        let tags = obtainSectionForLibrary(bookListTags)
+        let tags = obtainSectionForLibraryDict(bookListTags)
         let arrayTags = Array(tags.sort())
         return arrayTags[section]
         
@@ -210,7 +243,7 @@ class Library {
     
     
 //    func orderFotTagRow() -> String?{
-//        let tags = obtainTagsForLibrary(bookList)
+//        let tags = obtainTagsForLibrary(bookListTags)
 //        let arrayTags = Array(tags)
 //        return arrayTags[row]
 //        
