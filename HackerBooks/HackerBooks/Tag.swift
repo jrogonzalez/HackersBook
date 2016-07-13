@@ -24,6 +24,44 @@ class Tag: Equatable, Hashable{
         return auxArray
     }
     
+    func tagOrderedToArray(tags: Set<String>) -> [String]{
+        
+        // Transformamos en un array y ordenamos alfabeticamente
+        let auxArray = Array(tags.sort())
+        
+        // Creamos el array de salida e introducimos el primer elemento el favorito
+        var salida : [String] = []
+        salida.insert("favourite", atIndex: 0)
+        
+        //Iteramos y vamos introduciendo los tags salvo el favorito que ya lo introdujimos en la posicion 0
+        for each in auxArray {
+            if (each != "favourite"){
+                salida.append(each)
+            }
+        }
+        
+        return salida
+    }
+    
+    
+    func tagOrderedToArray() -> [String]{
+        
+        // Transformamos en un array y ordenamos alfabeticamente
+        let auxArray = Array(tags.sort())
+        
+        // Creamos el array de salida e introducimos el primer elemento el favorito
+        var salida : [String] = []
+        salida.insert("favourite", atIndex: 0)
+        
+        //Iteramos y vamos introduciendo los tags salvo el favorito que ya lo introdujimos en la posicion 0
+        for each in auxArray {
+            if (each != "favourite"){
+                salida.append(each)
+            }
+        }
+        
+        return salida
+    }
     
     //MARK: - Proxies
     var proxyForComparison : String{

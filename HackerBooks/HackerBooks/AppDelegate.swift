@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do{
             let chars = try readJSON()
             
-            let ordenAlfabetico : Bool = true
+            let ordenAlfabetico : Bool = false
 
             //Creamos el modelo
             let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)
@@ -33,8 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            let uVC = BookViewController(model: model)
             let uVC = LibraryViewController(model: model)
             
+            let tVC = SelectOrderViewController(table: uVC)
+            
             // Lo metemos en un Nav
-            let uNav = UINavigationController(rootViewController: uVC)
+            let uNav = UINavigationController(rootViewController: tVC)
 
             
             

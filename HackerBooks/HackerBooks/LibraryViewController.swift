@@ -124,14 +124,23 @@ class LibraryViewController: UITableViewController{
     }
     
     
-    func booksForTag (tag: Int?) -> [Book]?{
+    func booksForTag (tag: Int?) -> [Book]?{       
         
         guard let num = model.obtainSection(tag!) else{
             return nil
         }
         
-        let aux = model.bookListTags[num]
-        return aux
+        //Comprobamos como estamos ordenando en el modelo
+        if (model.orderedAlphabetically){
+            let aux = model.bookListAlpha[num]
+            return aux
+        }else{
+            let aux = model.bookListTags[num]
+            return aux
+        }
+        
+        
+        return nil
     }
 
     // Un Book para que libro que esta en la posicion 'index' de aquellos bajo un cierto tag. Mira a ver si puedes usar el metodo anterior para hacer parte de tu trabajo.
@@ -187,7 +196,7 @@ class LibraryViewController: UITableViewController{
         let num = model.booksCount(forTag: sectionName)
         
         
-        print("section: \(section) nº books: \(num) --> \(sectionName)")
+//        print("section: \(section) nº books: \(num) --> \(sectionName)")
         
         return num
     }
@@ -198,13 +207,13 @@ class LibraryViewController: UITableViewController{
         let cellId = "BookCell"
         
         
-        print("section: \(indexPath.section)")
-        print("row: \(indexPath.row)")
+//        print("section: \(indexPath.section)")
+//        print("row: \(indexPath.row)")
         
         // Averiguar de que personaje me estan preguntando
         let theBook = book(forIndexPath: indexPath)
         let sectionName = getTag(indexPath.section)
-        print("tag: \(sectionName)")
+//        print("tag: \(sectionName)")
         
         // Crear la celda
         var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
@@ -230,9 +239,26 @@ class LibraryViewController: UITableViewController{
     
     //MARK: - Utils
     func getTag(forSection: Int) -> String{
-        let list = model.obtainSectionForLibraryDict(model.bookListTags)
-        var array = Array(list.sort())
-        let sal = array[forSection]
+        let listTags : Set<String>
+        let listTagsOrdered : [String]
+
+        //Comprobamos como estamos ordenando en el modelo
+        if (model.orderedAlphabetically){
+            // Sacamos el set de tags del modelo
+            listTags = model.obtainSectionForLibraryDict(model.bookListAlpha)
+            
+            //Ordenamos los tags poniendo el favorito el primero
+            listTagsOrdered = model.tagsAlpha.tagOrderedToArray(listTags)
+        }else{
+            // Sacamos el set de tags del modelo
+            listTags = model.obtainSectionForLibraryDict(model.bookListTags)
+            
+            //Ordenamos los tags poniendo el favorito el primero
+            listTagsOrdered = model.tagsTags.tagOrderedToArray(listTags)
+        }
+        
+        
+        let sal = listTagsOrdered[forSection]
         return sal
     }
     
@@ -286,6 +312,11 @@ class LibraryViewController: UITableViewController{
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject([lastSection: String(section), lastRow: String(row)], forKey: lastBook)
         
+    }
+    
+    func reloadTable(){
+        //sincronizamos
+        self.tableView.reloadData()
     }
         
     

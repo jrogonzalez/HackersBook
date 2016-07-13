@@ -23,12 +23,18 @@ class Library {
     var bookListTags : BookDictionary = BookDictionary()
     var bookListAlpha : BookDictionary = BookDictionary()
     
-    var tags : Tag?
+//    var tags : Tag = Tag(tags: Set<String>())
+    var tagsTags : Tag = Tag(tags: Set<String>())
+    var tagsAlpha : Tag = Tag(tags: Set<String>())
+    
+    var orderedAlphabetically = false
     
     //MARK: - Initializers
     init(books: BookArray, orderedAlphabetically: Bool){
      
         let defaults = NSUserDefaults.standardUserDefaults()
+        self.orderedAlphabetically = orderedAlphabetically
+        print(" orderedAlphabetically: \(orderedAlphabetically)")
 //        if (orderedAlphabetically){
             //Creamos un nuevo diccionario vacio
             let sorted = books.sort {$0.title < $1.title}
@@ -36,7 +42,7 @@ class Library {
             bookListAlpha = makeOneSectionEmptyLibrary()
             
             
-            defaults.setObject(["lastSection": "0", "lastRow": "0"], forKey: "lastBook")
+            defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
             
             //Recorremos el array de libros para irlos añadiendo
             for each in sorted{
@@ -46,8 +52,8 @@ class Library {
 //        } else {
             //Creamos un nuevo diccionario vacio
             bookListTags = makeEmptyLibrary(obtainSectionForLibrary(books))
-            defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
-            
+//            defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
+        
             //Recorremos el array de libros para irlos añadiendo
             for each in books{
                 for each2 in each.tags.tagToOrderArray(){
@@ -60,20 +66,42 @@ class Library {
     
     var tagsCount : Int{
         get{
-            // indicar cuantos tags hay
-            return bookListTags.count
+            //Comprobamos como estamos ordenando en el modelo
+            if (orderedAlphabetically){
+                // indicar cuantos tags hay
+                return bookListAlpha.count
+            }else{
+                // indicar cuantos tags hay
+                return bookListTags.count
+            }
         }
+    }
+    
+    func modifyOrderedAlphabetically(orderAlpha: Bool){
+        self.orderedAlphabetically = orderAlpha
     }
     
     
     func booksCount(forTag tag: String)-> Int{
         
-        // cuantos libros hay para esta Tag?
-        guard let num = bookListTags[tag]?.count else{
-            return 0
+        //Comprobamos como estamos ordenando en el modelo
+        if (orderedAlphabetically){
+            // cuantos libros hay para esta Tag?
+            guard let num = bookListAlpha[tag]?.count else{
+                return 0
+            }
+            
+            return num
+
+        }else{
+            // cuantos libros hay para esta Tag?
+            guard let num = bookListTags[tag]?.count else{
+                return 0
+            }
+            
+            return num
+
         }
-        
-        return num
     }
     
     func book(forSection section: String, atRow row: Int
@@ -90,27 +118,64 @@ class Library {
     
     func book(forSection section: Int, atRow row: Int) -> Book?{
         
-        
+        //La parte de los favoritos es inde
         if section == 0{
-            if bookListTags["favourite"]?.count == 0 {
-                //Obtengo el tag de esa fila
-                guard let bookSection = obtainSection(section) else{
-                    return nil
+            
+            //Comprobamos como estamos ordenando en el modelo
+            if (orderedAlphabetically){
+                if bookListAlpha["favourite"]?.count > 0{
+                    guard let  bookRow = bookListAlpha["favourite"] else{
+                        return nil
+                    }
+                    
+                    return bookRow[row]
                 }
-                
-                guard let  bookRow = bookListTags[bookSection] else{
-                    return nil
+
+            }else{
+                if bookListTags["favourite"]?.count > 0{
+                    guard let  bookRow = bookListTags["favourite"] else{
+                        return nil
+                    }
+                    
+                    return bookRow[row]
                 }
-                
-                return bookRow[row]
-            }else if bookListTags["favourite"]?.count > 0{
-                guard let  bookRow = bookListTags["favourite"] else{
-                    return nil
-                }
-                
-                return bookRow[row]
+
             }
-        } else {
+//            if bookListTags["favourite"]?.count == 0 {
+//                //Obtengo el tag de esa fila
+//                guard let bookSection = obtainSection(section) else{
+//                    return nil
+//                }
+//                
+//                guard let  bookRow = bookListTags[bookSection] else{
+//                    return nil
+//                }
+//                
+//                return bookRow[row]
+//            }else if bookListTags["favourite"]?.count > 0{
+//                guard let  bookRow = bookListTags["favourite"] else{
+//                    return nil
+//                }
+//                
+//                return bookRow[row]
+//            }
+        }
+        
+        
+        
+        //Comprobamos como estamos ordenando en el modelo
+        if (orderedAlphabetically){
+            //Obtengo el tag de esa fila
+            guard let bookSection = obtainSection(section) else{
+                return nil
+            }
+            
+            guard let  bookRow = bookListAlpha[bookSection] else{
+                return nil
+            }
+            
+            return bookRow[row]
+        }else{
             //Obtengo el tag de esa fila
             guard let bookSection = obtainSection(section) else{
                 return nil
@@ -138,10 +203,12 @@ class Library {
         
         //Creamos el tag de vavoritos
         d["favourite"] = BookArray()
+        tagsTags.tags.insert("favourite")
         
         for each in array{
             d[each]  =   BookArray()
             tags.tags.insert(each)
+            tagsTags.tags.insert(each)
         }
         
         return d
@@ -154,6 +221,9 @@ class Library {
         d["favourite"] = BookArray()
         d["books"]  = BookArray()
         
+        tagsAlpha.tags.insert("favourite")
+        tagsAlpha.tags.insert("books")
+        
         return d
         
     }
@@ -164,7 +234,7 @@ class Library {
     }
     
     func removeFavorite(book: Book){
-        if var listAlpha = bookListAlpha["favourite"]{
+        if let listAlpha = bookListAlpha["favourite"]{
             var i = 0
             for each in listAlpha{
                 if each.title == book.title{
@@ -174,7 +244,7 @@ class Library {
             }
         }
         
-        if var listTags = bookListTags["favourite"]{
+        if let listTags = bookListTags["favourite"]{
             var m = 0
             for each in listTags{
                 if each.title == book.title{
@@ -233,10 +303,21 @@ class Library {
     
     
     func obtainSection(section: Int) -> String?{
+        
+        let tags : [String]
+        
+        //Comprobamos como estamos ordenando en el modelo
+        if (orderedAlphabetically){
+            tags = tagsAlpha.tagOrderedToArray()
+//            tags = obtainSectionForLibraryDict(bookListAlpha)
+        }else{
+            tags = tagsTags.tagOrderedToArray()
+        }
+        
 //        let tags = obtainSectionForLibrary(bookListTags)
-        let tags = obtainSectionForLibraryDict(bookListTags)
-        let arrayTags = Array(tags.sort())
-        return arrayTags[section]
+        
+//        let arrayTags = Array(tags.sort())
+        return tags[section]
         
     }
     

@@ -23,6 +23,8 @@
 		131A959B1D358046002703B9 /* filledStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 131A95991D358046002703B9 /* filledStar.png */; };
 		137194FA1D2EBC3A0056997E /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137194F91D2EBC3A0056997E /* LibraryViewController.swift */; };
 		137194FE1D2EC5860056997E /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137194FD1D2EC5860056997E /* Tag.swift */; };
+		138C13D41D36A8D50073CC94 /* SelectOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C13D21D36A8D50073CC94 /* SelectOrderViewController.swift */; };
+		138C13D51D36A8D50073CC94 /* SelectOrderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138C13D31D36A8D50073CC94 /* SelectOrderViewController.xib */; };
 		138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D135E1D2D6D16003CFE75 /* BookViewController.swift */; };
 		138D13611D2D6D16003CFE75 /* BookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138D135F1D2D6D16003CFE75 /* BookViewController.xib */; };
 		138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D13621D2D8485003CFE75 /* PdfViewController.swift */; };
@@ -69,6 +71,8 @@
 		131A95991D358046002703B9 /* filledStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filledStar.png; sourceTree = "<group>"; };
 		137194F91D2EBC3A0056997E /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		137194FD1D2EC5860056997E /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		138C13D21D36A8D50073CC94 /* SelectOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectOrderViewController.swift; sourceTree = "<group>"; };
+		138C13D31D36A8D50073CC94 /* SelectOrderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectOrderViewController.xib; sourceTree = "<group>"; };
 		138D135E1D2D6D16003CFE75 /* BookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookViewController.swift; sourceTree = "<group>"; };
 		138D135F1D2D6D16003CFE75 /* BookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookViewController.xib; sourceTree = "<group>"; };
 		138D13621D2D8485003CFE75 /* PdfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfViewController.swift; sourceTree = "<group>"; };
@@ -192,6 +196,8 @@
 				138D13621D2D8485003CFE75 /* PdfViewController.swift */,
 				138D13631D2D8485003CFE75 /* PdfViewController.xib */,
 				137194F91D2EBC3A0056997E /* LibraryViewController.swift */,
+				138C13D21D36A8D50073CC94 /* SelectOrderViewController.swift */,
+				138C13D31D36A8D50073CC94 /* SelectOrderViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -303,6 +309,7 @@
 				131A74D81D2AB79100CBC77C /* LaunchScreen.storyboard in Resources */,
 				131A74D51D2AB79100CBC77C /* Assets.xcassets in Resources */,
 				138D13611D2D6D16003CFE75 /* BookViewController.xib in Resources */,
+				138C13D51D36A8D50073CC94 /* SelectOrderViewController.xib in Resources */,
 				131A959B1D358046002703B9 /* filledStar.png in Resources */,
 				131A959A1D358046002703B9 /* EmptyStar.jpg in Resources */,
 				138D13651D2D8485003CFE75 /* PdfViewController.xib in Resources */,
@@ -336,6 +343,7 @@
 				131A74CE1D2AB79100CBC77C /* AppDelegate.swift in Sources */,
 				137194FE1D2EC5860056997E /* Tag.swift in Sources */,
 				131A75041D2ABC4F00CBC77C /* BookErrors.swift in Sources */,
+				138C13D41D36A8D50073CC94 /* SelectOrderViewController.swift in Sources */,
 				138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */,
 				138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */,
 				131A75021D2ABAEB00CBC77C /* JSONProcessing.swift in Sources */,
