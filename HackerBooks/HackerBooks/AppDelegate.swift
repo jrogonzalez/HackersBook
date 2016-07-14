@@ -22,9 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // crear instancia de modelo
         do{
+//            let defaults = NSUserDefaults.standardUserDefaults()
+//            defaults.setObject(nil, forKey: "JSON_Data")
+            
             let chars = try readJSON()
             
-            let ordenAlfabetico : Bool = false
+            let ordenAlfabetico : Bool = true
 
             //Creamos el modelo
             let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)

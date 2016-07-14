@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="10117" systemVersion="15D21" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -7,39 +7,29 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SelectOrderViewController" customModule="HackerBooks" customModuleProvider="target">
             <connections>
-                <outlet property="AlphaButton" destination="M2k-4M-1Hu" id="wAJ-hw-6TI"/>
-                <outlet property="SelectOrderView" destination="uCL-Tf-OEQ" id="c5P-c8-s8J"/>
-                <outlet property="TagButton" destination="uIv-1V-Bjo" id="nr3-IS-xTV"/>
+                <outlet property="SelectOrderButton" destination="si5-7f-jlm" id="DM4-tE-WPI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M2k-4M-1Hu">
-                    <rect key="frame" x="8" y="67" width="144" height="60"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <state key="normal" title="Alphabetic Order"/>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="si5-7f-jlm">
+                    <rect key="frame" x="0.0" y="66" width="768" height="29"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Alphabetic Order"/>
+                        <segment title="Tags Oder"/>
+                    </segments>
                     <connections>
-                        <action selector="AlphaOrderButton:" destination="-1" eventType="touchUpInside" id="xge-bB-oF5"/>
+                        <action selector="selectOrder:" destination="-1" eventType="valueChanged" id="hcK-Ev-fwe"/>
                     </connections>
-                </button>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uCL-Tf-OEQ">
-                    <rect key="frame" x="8" y="148" width="584" height="452"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
-                </view>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uIv-1V-Bjo">
-                    <rect key="frame" x="160" y="67" width="163" height="61"/>
-                    <state key="normal" title="Tags Order"/>
-                    <connections>
-                        <action selector="TagsOrderButton:" destination="-1" eventType="touchUpInside" id="iUr-VG-BYZ"/>
-                    </connections>
-                </button>
+                </segmentedControl>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <point key="canvasLocation" x="523" y="208"/>
         </view>
     </objects>
 </document>

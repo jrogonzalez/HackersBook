@@ -24,6 +24,9 @@ typealias   JSONObject      =   AnyObject
 typealias   JSONDictionary  =   [String:   JSONObject]
 typealias   JSONArray       =   [JSONDictionary]
 
+let urlHackerBooks = "https://t.co/K9ziV0z3SJ"
+let fileBooks = "HackerBooks.txt"
+
 func decode(book json: JSONDictionary) throws  -> Book {
     
     //Validamos el dict
@@ -39,15 +42,15 @@ func decode(book json: JSONDictionary) throws  -> Book {
     
     
     
-    guard let imageString = json["image_url"] as? String,
-        imageURL = NSURL(string: imageString),
-        imgData = NSData(contentsOfURL: imageURL),
-        image = UIImage(data: imgData)   else{
+    guard let imageString = json["image_url"] as? String else{
+//        imageURL = NSURL(string: imageString),
+//        imgData = NSData(contentsOfURL: imageURL),
+//        image = UIImage(data: imgData)
+    
         throw   BookErrors.wrongJSONFormat
     }
     
-    guard let pdfString = json["pdf_url"] as? String,
-        pdfURL = NSURL(string: pdfString)   else{
+    guard let pdfString = json["pdf_url"] as? String else{
             throw   BookErrors.wrongJSONFormat
     }
     
@@ -68,7 +71,7 @@ func decode(book json: JSONDictionary) throws  -> Book {
         throw BookErrors.wrongJSONFormat
     }
     
-    return Book(authors: aut, image_url: image, pdf_url: pdfURL, tags: tag, title: title, isFavourite: false)
+    return Book(authors: aut, image: imageString, pdf: pdfString, tags: tag, title: title, isFavourite: false)
 }
 
 func decode(book  json: JSONDictionary?) throws -> Book{
@@ -79,101 +82,50 @@ func decode(book  json: JSONDictionary?) throws -> Book{
     }else{
         throw BookErrors.nilJSONObject
     }
-}
-
-//MARK: - Loading
-func loadFromLocalFile(fileName name: String, bundle: NSBundle = NSBundle.mainBundle()) throws -> JSONArray{
-    
-    if let url = bundle.URLForResource(name),
-        data = NSData(contentsOfURL: url),
-        maybeArray = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? JSONArray,
-        array = maybeArray{
-        
-        return array
-        
-    }else{
-        throw BookErrors.jsonParsingError
-    }
-}
 
 
-func loadFromRemoteFile(fileURL name: String, bundle: NSBundle = NSBundle.mainBundle()) throws -> JSONArray{
-    
-    if let url = NSURL(string: name),
-        data = NSData(contentsOfURL: url),
-        maybeArray = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? JSONArray,
-        array = maybeArray{
-        
-        return array
-        
-    }else{
-        throw BookErrors.jsonParsingError
-    }
 }
 
 func readJSON() throws -> [Book]{
     
-    let defaults = NSUserDefaults.standardUserDefaults()
-    let fm = NSFileManager.defaultManager()
-    let url = fm.URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last!
-    let fich = url.URLByAppendingPathComponent("books.txt")
-    print(fich)
-    
     var json : JSONArray = JSONArray()
+    let defaults = NSUserDefaults.standardUserDefaults()
+    let file = obtainLocalUrlDocumentsFile(fileBooks)
+    do{
     
-    
-    var directory: ObjCBool = ObjCBool(false)
-    var exists: Bool = NSFileManager.defaultManager().fileExistsAtPath(fich.absoluteString, isDirectory: &directory)
-    
-    if exists && Bool(directory) {
-        // Exists. Directory.
-    } else if exists {
-        let dataLoad: NSData? = NSData(contentsOfFile: fich.absoluteString)
-    } else{
-        do{
-            let urlHackerBooks = "https://t.co/K9ziV0z3SJ"
-            let urlJSON = NSURL(string: urlHackerBooks)
+        // Si existe la variable es que ya hemos cargado el fichero anteriormente
+        let nombre = defaults.stringForKey("JSON_Data")
+        
+        if nombre != nil {
+            // Comprobamos si tenemos los datos en local
+            json = try loadFromLocalFile(fileName: file.absoluteString)!
+            print("cargado desde LOCAL")
             
-            let data = NSData(contentsOfURL: urlJSON!)
-            try  data?.writeToURL(fich, options: NSDataWritingOptions.AtomicWrite)
-            
-            defaults.setObject(urlHackerBooks, forKey: "JSON_Data")
-            
-            
-            //        let defaults = NSUserDefaults.standardUserDefaults()
-            guard let nombre = defaults.stringForKey("JSON_Data") else{
-                return [Book]()
-            }
-            
-            //            let json = try loadFromLocalFile(fileName: "books_readable.json")
-            json = try loadFromRemoteFile(fileURL: nombre)
-            
-            
-            
-            
-        }catch{
-            throw BookErrors.wrongJSONFormat
-        }
+        } else{
+            // Comprobamos el la URL para cargarlos
+            json = try loadFromRemoteFile(fileURL: urlHackerBooks)
+            print("cargado desde REMOTO")
 
-    }
-   
-    
-    var chars = [Book]()
-    for dict in json{
-        do{
-            let char = try decode(book: dict)
-            chars.append(char)
-        }catch{
-            print("error al procesar \(dict)")
         }
+        
+        var chars = [Book]()
+        for dict in json{
+            do{
+                let char = try decode(book: dict)
+                chars.append(char)
+            }catch{
+                print("error al procesar \(dict)")
+            }
+        }
+        
+        return chars
+
+    }catch{
+        throw BookErrors.wrongJSONFormat
     }
-    
-    return chars
-    
-    
+  
     
 }
-
 
 
 

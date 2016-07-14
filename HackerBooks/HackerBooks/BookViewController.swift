@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 class BookViewController: UIViewController {
     
@@ -37,6 +38,7 @@ class BookViewController: UIViewController {
         navigationController?.pushViewController(pVC, animated: true)
     
     }
+    
     init(model: Book){
         self.model = model
         
@@ -50,16 +52,24 @@ class BookViewController: UIViewController {
     
     func syncWithModelView(){
         
-        coverPdf.image = model.image_url
+        do{
+         coverPdf.image = try loadImage(forPath: model.image)
+        }catch{
+            
+        }
+        
         titlePdf.text = model.title
+        titlePdf.userInteractionEnabled = false
         
         let pru = model.authors.sort()
         
         let arryAuthors = Array(pru)
         authorsPdf.text = arryAuthors.joinWithSeparator(", ")
+        authorsPdf.userInteractionEnabled = false
         
         let pru2 = model.tags.tags.sort()
         tagsPdf.text = pru2.joinWithSeparator(", ")
+        tagsPdf.userInteractionEnabled = false
         
         self.favourite = model.isFavourite
         

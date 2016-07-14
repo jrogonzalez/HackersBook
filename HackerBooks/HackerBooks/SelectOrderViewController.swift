@@ -13,18 +13,22 @@ class SelectOrderViewController: UIViewController {
     var table: LibraryViewController
     
     @IBOutlet weak var SelectOrderView: UIView!
-    @IBOutlet weak var AlphaButton: UIButton!
-    @IBOutlet weak var TagButton: UIButton!
-    @IBAction func TagsOrderButton(sender: AnyObject) {
-        print("TagsOrderButton selected")
-        table.model.modifyOrderedAlphabetically(false)
-        table.reloadTable()
+
+    @IBOutlet weak var SelectOrderButton: UISegmentedControl!
+    @IBAction func selectOrder(sender: AnyObject) {
+        if sender.selectedSegmentIndex == 0{
+            print("SelectOrder selected 0")
+            
+            table.model.modifyOrderedAlphabetically(true)
+            table.reloadTable()
+        } else{
+            print("SelectOrder selected 1")
+            table.model.modifyOrderedAlphabetically(false)
+            table.reloadTable()
+        }
+        
     }
-    @IBAction func AlphaOrderButton(sender: AnyObject) {
-        print("AlphaOrderButton selected")
-        table.model.modifyOrderedAlphabetically(true)
-        table.reloadTable()
-    }
+
     
     init(table: LibraryViewController){
         self.table = table
@@ -38,6 +42,7 @@ class SelectOrderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+
         // Do any additional setup after loading the view.
         addTableControllerView()
     }
@@ -50,26 +55,30 @@ class SelectOrderViewController: UIViewController {
     // MARK: - Add Subview
     func addTableControllerView(){
         
-        let segBounds = self.AlphaButton.bounds
+        let segBounds = self.SelectOrderButton.bounds
         let totalBounds = self.navigationController?.view.bounds
         
-//        let ancho = segBounds.size.width
-//        let alto = totalBounds!.size.height
-        let ancho = self.AlphaButton.bounds.size.width + self.TagButton.bounds.size.width
-        let alto = CGFloat(700)
+        let ancho = CGFloat(320)
+        let alto = CGFloat(650)
+//        let ancho = self.AlphaButton.bounds.size.width + self.TagButton.bounds.size.width
+//        let alto = CGFloat(700)
         
         
         
-//        let X = segBounds.origin.x
+        let X = segBounds.origin.x
 //        let Y = segBounds.origin.y+segBounds.size.height
 
-        let X = segBounds.origin.x
+//        let X = CGFloat(20)
         let Y = CGFloat(100)
         
         
         print ("ancho: \(ancho) - alto \(alto)")
         
         let position = CGPoint(x: X, y: Y)
+        
+        
+        print ("X: \(X) - Y \(Y)")
+        
         let totalSpace = CGSize(width: ancho,
                                 height: alto)
         

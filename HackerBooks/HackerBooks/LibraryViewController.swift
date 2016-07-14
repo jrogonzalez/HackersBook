@@ -39,6 +39,8 @@ class LibraryViewController: UITableViewController{
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        
+        self.title = "Hackerbooks"
                 
 //        self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.5
 //            green:0
@@ -223,9 +225,19 @@ class LibraryViewController: UITableViewController{
             cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellId)
         }
         
+        
+        do{
+            let image = try obtainImage(theBook.image)
+            cell?.imageView?.image = image
+        }catch{
+            
+        }
+        
+        
         // Sincronizar personaje -> celda
-        cell?.imageView?.image = theBook.image_url
+        
         cell?.textLabel?.text = theBook.title
+        cell?.textLabel?.font = UIFont(name: "pepe", size: CGFloat(8))
     
 //        cell?.detailTextLabel?.text = theBook.
         

@@ -16,4 +16,5 @@ enum BookErrors :   ErrorType{
     case initModelError
     case resourceURLNotReachable
     case bookNotFound
+    case imageNotFound
 }

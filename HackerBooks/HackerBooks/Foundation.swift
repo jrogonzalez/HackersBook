@@ -3,7 +3,7 @@ import Foundation
 
 extension NSBundle{
     
-    func URLForResource(name: String?) -> NSURL?{
+    func URLForResourceCaca(name: String?) -> NSURL?{
         
         let components = name?.componentsSeparatedByString(".")
         let fileTitle = components?.first
@@ -12,4 +12,6 @@ extension NSBundle{
         return URLForResource(fileTitle, withExtension: fileExtension)
         
     }
+    
+    
 }

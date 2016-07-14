@@ -25,6 +25,7 @@
 		137194FE1D2EC5860056997E /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137194FD1D2EC5860056997E /* Tag.swift */; };
 		138C13D41D36A8D50073CC94 /* SelectOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C13D21D36A8D50073CC94 /* SelectOrderViewController.swift */; };
 		138C13D51D36A8D50073CC94 /* SelectOrderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138C13D31D36A8D50073CC94 /* SelectOrderViewController.xib */; };
+		138C13D71D38194F0073CC94 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C13D61D38194F0073CC94 /* Utils.swift */; };
 		138D13601D2D6D16003CFE75 /* BookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D135E1D2D6D16003CFE75 /* BookViewController.swift */; };
 		138D13611D2D6D16003CFE75 /* BookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 138D135F1D2D6D16003CFE75 /* BookViewController.xib */; };
 		138D13641D2D8485003CFE75 /* PdfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138D13621D2D8485003CFE75 /* PdfViewController.swift */; };
@@ -73,6 +74,7 @@
 		137194FD1D2EC5860056997E /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		138C13D21D36A8D50073CC94 /* SelectOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectOrderViewController.swift; sourceTree = "<group>"; };
 		138C13D31D36A8D50073CC94 /* SelectOrderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectOrderViewController.xib; sourceTree = "<group>"; };
+		138C13D61D38194F0073CC94 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		138D135E1D2D6D16003CFE75 /* BookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookViewController.swift; sourceTree = "<group>"; };
 		138D135F1D2D6D16003CFE75 /* BookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookViewController.xib; sourceTree = "<group>"; };
 		138D13621D2D8485003CFE75 /* PdfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfViewController.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				131A75061D2AC23000CBC77C /* Foundation.swift */,
+				138C13D61D38194F0073CC94 /* Utils.swift */,
 			);
 			name = Framework;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				131A74FE1D2AB80F00CBC77C /* Book.swift in Sources */,
 				137194FA1D2EBC3A0056997E /* LibraryViewController.swift in Sources */,
 				131A75091D2AC48600CBC77C /* Library.swift in Sources */,
+				138C13D71D38194F0073CC94 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
