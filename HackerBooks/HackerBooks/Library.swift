@@ -23,44 +23,53 @@ class Library {
     var bookListTags : BookDictionary = BookDictionary()
     var bookListAlpha : BookDictionary = BookDictionary()
     
-//    var tags : Tag = Tag(tags: Set<String>())
+
     var tagsTags : Tag = Tag(tags: Set<String>())
     var tagsAlpha : Tag = Tag(tags: Set<String>())
+    
+    var favourites = Set<String>()
     
     var orderedAlphabetically = false
     
     //MARK: - Initializers
     init(books: BookArray, orderedAlphabetically: Bool){
-     
+        
+        loadFavourites()
+        
         let defaults = NSUserDefaults.standardUserDefaults()
         self.orderedAlphabetically = orderedAlphabetically
         print(" orderedAlphabetically: \(orderedAlphabetically)")
-//        if (orderedAlphabetically){
-            //Creamos un nuevo diccionario vacio
-            let sorted = books.sort {$0.title < $1.title}
-            
-            bookListAlpha = makeOneSectionEmptyLibrary()
-            
-            
-            defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
-            
-            //Recorremos el array de libros para irlos añadiendo
-            for each in sorted{
-                    bookListAlpha["books"]?.append(each)
-                
-            }
-//        } else {
-            //Creamos un nuevo diccionario vacio
-            bookListTags = makeEmptyLibrary(obtainSectionForLibrary(books))
-//            defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
+        //Creamos un nuevo diccionario vacio
+        let sorted = books.sort {$0.title < $1.title}
         
-            //Recorremos el array de libros para irlos añadiendo
-            for each in books{
-                for each2 in each.tags.tagToOrderArray(){
-                    bookListTags[each2]?.append(each)
-                }
+        //Creamos los diccionarios vacios
+        bookListAlpha = makeOneSectionEmptyLibrary()
+        bookListTags = makeEmptyLibrary(obtainSectionForLibrary(books))
+            
+            
+        defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
+            
+        //Recorremos el array de libros para irlos añadiendo
+        for each in sorted{
+            
+            //Introducimos los favoritos en los dos diccionarios
+            // Lo hacemos aqui ya que no tenemos duplicados al tenerlos odenados alfabeticamente
+            if favourites.contains(each.title){
+                bookListAlpha["favourite"]?.append(each)
+                bookListTags["favourite"]?.append(each)
+                each.markAsFavourite()
             }
-//        }
+            
+            bookListAlpha["books"]?.append(each)
+        }
+        
+        
+        //Recorremos el array de libros para irlos añadiendo
+        for each in books{
+            for each2 in each.tags.tagToOrderArray(){
+                bookListTags[each2]?.append(each)
+            }
+        }
         
     }
     
@@ -103,18 +112,7 @@ class Library {
 
         }
     }
-    
-    func book(forSection section: String, atRow row: Int
-                           ) -> Book{
-        
-        // el personaje nº index en el tag introducido
-        let chars = bookListTags[section]!
-        let char = chars[row]
-        
-        return char
-        
-        
-    }
+
     
     func book(forSection section: Int, atRow row: Int) -> Book?{
         
@@ -139,26 +137,7 @@ class Library {
                     
                     return bookRow[row]
                 }
-
             }
-//            if bookListTags["favourite"]?.count == 0 {
-//                //Obtengo el tag de esa fila
-//                guard let bookSection = obtainSection(section) else{
-//                    return nil
-//                }
-//                
-//                guard let  bookRow = bookListTags[bookSection] else{
-//                    return nil
-//                }
-//                
-//                return bookRow[row]
-//            }else if bookListTags["favourite"]?.count > 0{
-//                guard let  bookRow = bookListTags["favourite"] else{
-//                    return nil
-//                }
-//                
-//                return bookRow[row]
-//            }
         }
         
         
@@ -187,10 +166,6 @@ class Library {
             
             return bookRow[row]
         }
-        
-        return nil
-        
-        
     }
 
     
@@ -231,6 +206,8 @@ class Library {
     func addFavorite(book: Book){
         bookListAlpha["favourite"]?.append(book)
         bookListTags["favourite"]?.append(book)
+        favourites.insert(book.title)
+        saveFavourites()
     }
     
     func removeFavorite(book: Book){
@@ -252,7 +229,10 @@ class Library {
                 }
                 m += 1
             }
-        }                
+        }
+        
+        favourites.remove(book.title)
+        saveFavourites()
     }
     
     func obtainSectionForLibrary(books:BookArray)-> Tag{
@@ -294,9 +274,6 @@ class Library {
     }
     
     func obtainFirstSection() -> String?{
-//        let tags = obtainTagsForLibrary(bookListTags)
-//        let arrayTags = Array(tags)
-//        return arrayTags[0]
         return "1"
         
     }
@@ -309,27 +286,13 @@ class Library {
         //Comprobamos como estamos ordenando en el modelo
         if (orderedAlphabetically){
             tags = tagsAlpha.tagOrderedToArray()
-//            tags = obtainSectionForLibraryDict(bookListAlpha)
         }else{
             tags = tagsTags.tagOrderedToArray()
         }
-        
-//        let tags = obtainSectionForLibrary(bookListTags)
-        
-//        let arrayTags = Array(tags.sort())
+
         return tags[section]
         
     }
-    
-    
-    
-//    func orderFotTagRow() -> String?{
-//        let tags = obtainTagsForLibrary(bookListTags)
-//        let arrayTags = Array(tags)
-//        return arrayTags[row]
-//        
-//    }
-    
     
     //MARK: - Proxies
     var proxyForComparison : String{
@@ -344,43 +307,48 @@ class Library {
         }
     }
     
-    
-//    //MARK: - Equatable & Comparable
-//    func ==(lhs: BookDictionary, rhs: BookDictionary) -> Bool{
-//    
-//    guard (lhs !== rhs) else{
-//    return true
-//    }
-//    
-//    return lhs.proxyForComparison == rhs.proxyForComparison
-//    }
-//    
-//    func <(lhs: StarWarsCharacter, rhs: StarWarsCharacter) -> Bool{
-//    return lhs.proxyForSorting < rhs.proxyForSorting
-//    }
-    
-    
-    
-}
+    func saveFavourites(){
+        
+      do{
+        
+        //Creo la url local
+        let url = obtainLocalUrlDocumentsFile("FavouriteBooks.txt")
+        
+        let lista = favourites.joinWithSeparator("#")
+        print("LISTA FAVORITOS-->  \(lista)")
+        
+        try lista.writeToURL(url, atomically: true, encoding: NSUTF8StringEncoding)
 
-extension Dictionary {
-    
-    //MARK: - Order
-    // Faster because of no lookups, may take more memory because of duplicating contents
-    func keysSortedByValue(isOrderedBefore:(Value, Value) -> Bool) -> [Key] {
-        return Array(self)
-            .sort() {
-                let (_, lv) = $0
-                let (_, rv) = $1
-                return isOrderedBefore(lv, rv)
-            }
-            .map {
-                let (k, _) = $0
-                return k
-        }
+        
+      }catch let error as NSError{
+        print("Error en el guardado de favorito: \(error)")
+      }
+        
     }
-}
+    
+    func loadFavourites(){
+        //Creo la url local
+        let url = obtainLocalUrlDocumentsFile("FavouriteBooks.txt")
 
+        do{
+            let data = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
+            
+            let lista = data.componentsSeparatedByString("#")
+            for each in lista{
+                favourites.insert(each)
+            }
+            
+            print("LISTA FAVORITOS-->  \(lista)")
+
+        }catch let error as NSError{
+            print("Error en la carga de favoritos \(error)")
+        }
+        
+       
+        
+    }
+    
+}
 
 
 

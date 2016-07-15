@@ -30,11 +30,12 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
     func synchronized(){
         
         do{
-            let pdf = try loadPdf(forPath: model.pdf)
-            pdfView.loadRequest(pdf!)
+            pdfView.loadRequest(try model.loadPdf()!)
         }catch{
             
         }
+        
+        
         pdfView.delegate = self
         activityIndicator.startAnimating()
         

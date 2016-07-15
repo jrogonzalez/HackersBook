@@ -214,7 +214,7 @@ class LibraryViewController: UITableViewController{
         
         // Averiguar de que personaje me estan preguntando
         let theBook = book(forIndexPath: indexPath)
-        let sectionName = getTag(indexPath.section)
+//        let sectionName = getTag(indexPath.section)
 //        print("tag: \(sectionName)")
         
         // Crear la celda
@@ -227,11 +227,12 @@ class LibraryViewController: UITableViewController{
         
         
         do{
-            let image = try obtainImage(theBook.image)
-            cell?.imageView?.image = image
+            cell?.imageView?.image = try theBook.loadImage()!
         }catch{
             
         }
+        
+        
         
         
         // Sincronizar personaje -> celda
@@ -349,7 +350,7 @@ extension LibraryViewController: BookViewControllerDelegate{
     
     func bookViewController(vc: BookViewController, didAddFavourite book: Book){
         // Actualizamos el modelo
-        model.addFavorite(book)
+        model.addFavorite(book)        
         
         //sincronizamos
         self.tableView.reloadData()
@@ -359,6 +360,7 @@ extension LibraryViewController: BookViewControllerDelegate{
     func bookViewController(vc: BookViewController, didRemoveFavourite book: Book){
         // Actualizamos el modelo
         model.removeFavorite(book)
+        
         //sincronizamos
         self.tableView.reloadData()
     }

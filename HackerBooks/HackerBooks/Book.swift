@@ -28,6 +28,75 @@ class Book{
         self.title          = title
         self.isFavourite    = isFavourite
         
-    }    
+    }
+    
+    func loadImage() throws -> UIImage?{
+        
+        
+        //Probamos a buscarla en local
+        let localURL = obtainLocalUrlDocumentsFile(fileForResourceName(self.image))
+        
+        if let imgData = NSData(contentsOfURL: localURL),
+            image = UIImage(data: imgData) {
+            return image
+            
+        }else{
+            
+            //Si no esta en local probamos en remoto
+            if let imgURL = NSURL(string: self.image),
+                imgData = NSData(contentsOfURL: imgURL),
+                image = UIImage(data: imgData) {
+                
+                do{
+                    try imgData.writeToURL(localURL, options: NSDataWritingOptions.AtomicWrite)
+                }catch{
+                    throw BookErrors.imageNotFound
+                }
+                return image
+                
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    
+    func loadPdf() throws -> NSURLRequest?{
+        
+        //Probamos a buscarla en local
+        let localURL = obtainLocalUrlDocumentsFile(fileForResourceName(self.pdf))
+        let pdfData = NSData(contentsOfURL: localURL)
+        
+        if pdfData != nil{
+            let pdf = NSURLRequest(URL: localURL)
+            print("load pdf from LOCAL")
+            return pdf
+        }else{
+            
+            //Si no esta en local probamos en remoto
+            let pdfURL = NSURL(string: self.pdf)
+            
+            let pdf = NSURLRequest(URL: pdfURL!)
+            
+            do{
+                if let pdfData = NSData(contentsOfURL: pdfURL!) {
+                    try pdfData.writeToURL(localURL, options: NSDataWritingOptions.AtomicWrite)
+                }
+                
+            }catch{
+                throw BookErrors.imageNotFound
+            }
+            print("load pdf from REMOTE")
+            return pdf
+            
+            
+        }
+        
+    }
+    
+    func markAsFavourite(){
+        self.isFavourite = true
+    }
     
 }

@@ -53,7 +53,7 @@ class BookViewController: UIViewController {
     func syncWithModelView(){
         
         do{
-         coverPdf.image = try loadImage(forPath: model.image)
+            coverPdf.image = try model.loadImage()
         }catch{
             
         }
@@ -114,6 +114,7 @@ class BookViewController: UIViewController {
             emptyStar.hidden = true
             filledStar.hidden = false
             model.isFavourite = true
+//            model.saveFavourite()
             
             // Avisamos al delegado
             delegate?.bookViewController(self, didAddFavourite: model)
@@ -131,6 +132,7 @@ class BookViewController: UIViewController {
             filledStar.hidden = true
             emptyStar.hidden = false
             model.isFavourite = false
+//            model.removeFavourite()
             
             //Avisamos al delegado
             delegate?.bookViewController(self, didRemoveFavourite: model)
@@ -176,6 +178,9 @@ class BookViewController: UIViewController {
         nc.removeObserver(self)
         
     }
+    
+    
+
     
     /*
     // MARK: - Navigation

@@ -26,6 +26,7 @@ typealias   JSONArray       =   [JSONDictionary]
 
 let urlHackerBooks = "https://t.co/K9ziV0z3SJ"
 let fileBooks = "HackerBooks.txt"
+let favouriteBooks = "FavouriteBooks.txt"
 
 func decode(book json: JSONDictionary) throws  -> Book {
     
@@ -43,10 +44,6 @@ func decode(book json: JSONDictionary) throws  -> Book {
     
     
     guard let imageString = json["image_url"] as? String else{
-//        imageURL = NSURL(string: imageString),
-//        imgData = NSData(contentsOfURL: imageURL),
-//        image = UIImage(data: imgData)
-    
         throw   BookErrors.wrongJSONFormat
     }
     
@@ -74,16 +71,24 @@ func decode(book json: JSONDictionary) throws  -> Book {
     return Book(authors: aut, image: imageString, pdf: pdfString, tags: tag, title: title, isFavourite: false)
 }
 
-func decode(book  json: JSONDictionary?) throws -> Book{
-    
-    
-    if case .Some(let jsonDict) = json{
-        return try decode(book: jsonDict)
-    }else{
-        throw BookErrors.nilJSONObject
-    }
 
-
+func encode(book: Book) throws  -> AnyObject {
+    
+    //creamos el json
+    let json : AnyObject = [
+            "authors": Array(book.authors).joinWithSeparator(","),
+            "image_url":book.image,
+            "pdf_url":book.pdf,
+            "tags":Array(book.tags.tags).joinWithSeparator(","),
+            "title": book.title
+        
+    ]
+    
+//        return json.absoluteString
+    
+//    let jsonString = String(data: json as! NSData, encoding: NSUTF8StringEncoding)
+    
+    return json
 }
 
 func readJSON() throws -> [Book]{
