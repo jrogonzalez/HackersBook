@@ -30,8 +30,9 @@ class LibraryViewController: UITableViewController{
     //MARK: - Initializers
     init(model: Library){
         self.model = model
-        self.tags = self.model.obtainSectionForLibraryDict(model.bookListTags)
+        self.tags = self.model.obtainSectionForLibraryDict(model.bookListTags)        
         super.init(nibName: nil, bundle: nil)
+        self.title = "HackerBooks"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,20 +48,62 @@ class LibraryViewController: UITableViewController{
     // MARK: - Table View Delegate
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        // Averiguar cual es el personaje
-        let selectedBook = book(forIndexPath: indexPath)
-        
-        // Avisar al delegado
-        delegate?.libraryViewController(self, didSelectBook: selectedBook)
-        
-        saveLastBookSelectedSection(indexPath.section, row: indexPath.row)
-        
-        
-        // Enviamos la misma info via notificaciones
-        let nc = NSNotificationCenter.defaultCenter()
-        let notif = NSNotification(name: BookDidChangeNotification, object: self, userInfo: [BookKey:selectedBook])
-        nc.postNotification(notif)
+        switch UIDevice.currentDevice().userInterfaceIdiom {
+        case .Phone:
+            // It's an iPhone
+            // Averiguar cual es el libro
+            
+            // Averiguar cual es el libro
+            let selectedBook = book(forIndexPath: indexPath)
+            
+            // Creamos un character view controller
+            let bookVC = BookViewController(model: selectedBook)
+            
+            // Lo metro dentro de un navigation
+            let charNav = UINavigationController(rootViewController: bookVC)           
+            
+            // asignamos delegados
+            self.delegate = bookVC
+//            bookVC.delegate = uVC
 
+            
+            self.navigationController?.pushViewController(charNav, animated: true)
+            
+            // Avisar al delegado
+            delegate?.libraryViewController(self, didSelectBook: selectedBook)
+
+            
+            
+            break
+        case .Pad:
+            // It's an iPad
+            // Averiguar cual es el libro
+            let selectedBook = book(forIndexPath: indexPath)
+            
+            // Avisar al delegado
+            delegate?.libraryViewController(self, didSelectBook: selectedBook)
+            
+            saveLastBookSelectedSection(indexPath.section, row: indexPath.row)
+            
+            
+            // Enviamos la misma info via notificaciones
+            let nc = NSNotificationCenter.defaultCenter()
+            let notif = NSNotification(name: BookDidChangeNotification, object: self, userInfo: [BookKey:selectedBook])
+            nc.postNotification(notif)
+
+            
+            
+            break
+        default:
+            // Uh, oh! What could it be?
+            break
+        }
+        
+        
+        
+        
+        
+        
     }
 
     override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -275,7 +318,18 @@ class LibraryViewController: UITableViewController{
         //sincronizamos
         self.tableView.reloadData()
     }
+    
+    func libraryViewController(vc: BookViewController, didSelectBook book: Book){
         
+        // Creamos un character view controller
+        let bookVC = BookViewController(model: book)
+        
+        self.delegate = bookVC
+        
+        // Lo metro dentro de un navigation
+        _ = self.navigationController?.pushViewController(bookVC, animated: true)
+    }
+    
     
 
 }
@@ -284,7 +338,6 @@ class LibraryViewController: UITableViewController{
 protocol LibraryViewControllerDelegate{
     
     func libraryViewController(vc: LibraryViewController, didSelectBook book: Book)
-            
     
 }
 

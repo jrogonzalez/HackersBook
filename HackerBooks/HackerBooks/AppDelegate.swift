@@ -20,47 +20,93 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // crear una window
         window = UIWindow(frame:UIScreen.mainScreen().bounds)
         
+        
         // crear instancia de modelo
         do{
+            
             
             let chars = try readJSON()
             
             let ordenAlfabetico : Bool = true
+            
+            switch UIDevice.currentDevice().userInterfaceIdiom {
+            case .Phone:
+                print("Soy un IPHONE")
+                
+                
+                //Creamos el modelo
+                let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)
+                
+                // crear el VC
+                let uVC = LibraryViewController(model: model)
+                
+                let tVC = SelectOrderViewController(table: uVC)
+                
+                // Lo metemos en un Nav
+                let uNav = UINavigationController(rootViewController: tVC)                
+                
+                // Nav como root view Controller
+                window?.rootViewController = uNav
+                
+                // Mostramos la window
+                window?.makeKeyAndVisible()
+                
+                
+                break
+            // It's an iPhone
+            case .Pad:
+                print("Soy un IPAD")
+                
+                //Creamos el modelo
+                let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)
+                
+                // crear el VC
+                let uVC = LibraryViewController(model: model)
+                
+                let tVC = SelectOrderViewController(table: uVC)
+                
+                // Lo metemos en un Nav
+                let uNav = UINavigationController(rootViewController: tVC)
+                
+                
+                
+                // Creamos un character view controller
+                let bookVC = BookViewController(model: try uVC.lastSelectedBook()!)
+                
+                // Lo metro dentro de un navigation
+                let charNav = UINavigationController(rootViewController: bookVC)
+                
+                // Creamos el splitView y le endosmos los dos nav
+                let splitVC = UISplitViewController()
+                splitVC.viewControllers = [uNav, charNav]
+                
+                // Nav como root view Controller
+                window?.rootViewController = splitVC
 
-            //Creamos el modelo
-            let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)
+                
+                // asignamos delegados
+                uVC.delegate = bookVC
+                bookVC.delegate = uVC
+                
+                
+                // Mostramos la window
+                window?.makeKeyAndVisible()
+                
+                break
+                
+            // It's an iPad
+            case .Unspecified:
+                print("Soy un OTRA COSA")
+                break
+            default:
+                print("Soy un DEFAULT")
+                // Uh, oh! What could it be?
+            }
             
-            // crear el VC
-            let uVC = LibraryViewController(model: model)
             
-            let tVC = SelectOrderViewController(table: uVC)
-            
-            // Lo metemos en un Nav
-            let uNav = UINavigationController(rootViewController: tVC)
 
             
             
-            // Creamos un character view controller
-            let bookVC = BookViewController(model: try uVC.lastSelectedBook()!)
-
-            // Lo metro dentro de un navigation
-            let charNav = UINavigationController(rootViewController: bookVC)
-            
-            // Creamos el splitView y le endosmos los dos nav
-            let splitVC = UISplitViewController()
-            splitVC.viewControllers = [uNav, charNav]
-            
-            // Nav como root view Controller
-            window?.rootViewController = splitVC
-
-            
-            // asignamos delegados
-            uVC.delegate = bookVC
-            bookVC.delegate = uVC
-            
-            
-            // Mostramos la window
-            window?.makeKeyAndVisible()
             
             return true
             

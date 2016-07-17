@@ -55,7 +55,8 @@ class BookViewController: UIViewController {
     func syncWithModelView(){
         
         do{
-            coverPdf.image = try model.loadImage()
+            let image = try model.loadImage()
+            coverPdf.image = image
         }catch{
             
         }
@@ -196,10 +197,37 @@ extension BookViewController: LibraryViewControllerDelegate{
     
     
     func libraryViewController(vc: LibraryViewController, didSelectBook book: Book){
-        // Actualizamos el modelo
-        model = book
         
-        // Sincronizamos las vistas con el nuevo modelo
-        syncWithModelView()
+        do{
+            switch UIDevice.currentDevice().userInterfaceIdiom {
+            case .Phone:
+                // Actualizamos el modelo               
+                model = book
+
+                
+                // Sincronizamos las vistas con el nuevo modelo
+                syncWithModelView()
+                
+                break
+            case .Pad:
+                // It's an iPad
+                // Actualizamos el modelo
+                model = book
+                
+                // Sincronizamos las vistas con el nuevo modelo
+                syncWithModelView()
+                break
+            default:
+                // Uh, oh! What could it be?
+                break
+            }
+            
+        }catch let error as NSError{
+            print("Error: \(error)")
+            
+        }
+        
+        
     }
+
 }
