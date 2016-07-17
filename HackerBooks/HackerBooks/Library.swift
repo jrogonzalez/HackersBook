@@ -46,7 +46,8 @@ class Library {
         bookListAlpha = makeOneSectionEmptyLibrary()
         bookListTags = makeEmptyLibrary(obtainSectionForLibrary(books))
             
-            
+        //MARK: TODO implementar lasSeectedBook, esta pare a tenia hecha pero al tener difeentes maneras de ordenar 
+        //me quedó cojo como ubicar la celda que tenia selecionada en el lastIndex. Lo he dejado por tener constancia del trabajo ya hecho
         defaults.setObject(["lastSection": "1", "lastRow": "0"], forKey: "lastBook")
             
         //Recorremos el array de libros para irlos añadiendo
@@ -139,7 +140,6 @@ class Library {
                 }
             }
         }
-        
         
         
         //Comprobamos como estamos ordenando en el modelo
@@ -312,11 +312,12 @@ class Library {
       do{
         
         //Creo la url local
+        let urlCache = obtainLocalCacheUrlDocumentsFile("FavouriteBooks.txt")
         let url = obtainLocalUrlDocumentsFile("FavouriteBooks.txt")
         
         let lista = favourites.joinWithSeparator("#")
-        print("LISTA FAVORITOS-->  \(lista)")
         
+        try lista.writeToURL(urlCache, atomically: true, encoding: NSUTF8StringEncoding)
         try lista.writeToURL(url, atomically: true, encoding: NSUTF8StringEncoding)
 
         
@@ -328,9 +329,25 @@ class Library {
     
     func loadFavourites(){
         //Creo la url local
+        let urlCache = obtainLocalCacheUrlDocumentsFile("FavouriteBooks.txt")
         let url = obtainLocalUrlDocumentsFile("FavouriteBooks.txt")
 
         do{
+           
+            let dataCache = try NSString(contentsOfURL: urlCache, encoding: NSUTF8StringEncoding)
+            
+            let lista = dataCache.componentsSeparatedByString("#")
+            for each in lista{
+                favourites.insert(each)
+            }
+
+        }catch let error as NSError{
+            print("No existe en cache el fichero FavouriteBooks.txt \(error)")
+        }
+        
+        
+        do{
+                       
             let data = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
             
             let lista = data.componentsSeparatedByString("#")
@@ -338,11 +355,10 @@ class Library {
                 favourites.insert(each)
             }
             
-            print("LISTA FAVORITOS-->  \(lista)")
-
         }catch let error as NSError{
-            print("Error en la carga de favoritos \(error)")
+            print("No existe en documentos el fichero FavouriteBooks.txt \(error)")
         }
+
         
        
         

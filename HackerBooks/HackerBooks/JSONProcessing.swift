@@ -41,8 +41,6 @@ func decode(book json: JSONDictionary) throws  -> Book {
         aut.insert(each.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
     }
     
-    
-    
     guard let imageString = json["image_url"] as? String else{
         throw   BookErrors.wrongJSONFormat
     }
@@ -84,10 +82,6 @@ func encode(book: Book) throws  -> AnyObject {
         
     ]
     
-//        return json.absoluteString
-    
-//    let jsonString = String(data: json as! NSData, encoding: NSUTF8StringEncoding)
-    
     return json
 }
 
@@ -95,6 +89,7 @@ func readJSON() throws -> [Book]{
     
     var json : JSONArray = JSONArray()
     let defaults = NSUserDefaults.standardUserDefaults()
+    let fileCache = obtainLocalCacheUrlDocumentsFile(fileBooks)
     let file = obtainLocalUrlDocumentsFile(fileBooks)
     do{
     
@@ -102,14 +97,19 @@ func readJSON() throws -> [Book]{
         let nombre = defaults.stringForKey("JSON_Data")
         
         if nombre != nil {
-            // Comprobamos si tenemos los datos en local
-            json = try loadFromLocalFile(fileName: file.absoluteString)!
-            print("cargado desde LOCAL")
+            // Comprobamos si tenemos los datos en Cache sino en local y sino tiramos de remoto
+            if let cache = loadFromLocalFile(fileName: fileCache.absoluteString){
+               json = cache
+            }else if let aux = loadFromLocalFile(fileName: file.absoluteString){
+               json = aux
+            }else{
+                // Por seguridad cargamos desde remoto de nuevo
+                json = try loadFromRemoteFile(fileURL: urlHackerBooks)
+            }
             
         } else{
             // Comprobamos el la URL para cargarlos
             json = try loadFromRemoteFile(fileURL: urlHackerBooks)
-            print("cargado desde REMOTO")
 
         }
         

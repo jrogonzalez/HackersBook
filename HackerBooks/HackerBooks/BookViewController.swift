@@ -31,7 +31,7 @@ class BookViewController: UIViewController {
     
     @IBAction func displayPDF(sender: AnyObject) {
         
-        // Create a pdfViewController
+        // Creamos el pdfViewController
         let pVC = PdfViewController(model: model)
         
         // Push to the navigator
@@ -39,6 +39,8 @@ class BookViewController: UIViewController {
     
     }
     
+    
+    //MARK: -initalizers
     init(model: Book){
         self.model = model
         
@@ -87,12 +89,13 @@ class BookViewController: UIViewController {
     }
     
 
+    // MARK: - View Data
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // create tap gesture recognizer
-        let tapGestureEmptyStar = UITapGestureRecognizer(target: self, action: "emptyStarTapped:")
-        let tapGestureFilledStar = UITapGestureRecognizer(target: self, action: "filledStarTapped:")
+        let tapGestureEmptyStar = UITapGestureRecognizer(target: self, action: #selector(BookViewController.emptyStarTapped(_:)))
+        let tapGestureFilledStar = UITapGestureRecognizer(target: self, action: #selector(BookViewController.filledStarTapped(_:)))
         
         // add it to the image view;
         emptyStar.addGestureRecognizer(tapGestureEmptyStar)
@@ -101,20 +104,20 @@ class BookViewController: UIViewController {
         
         // add it to the image view;
         filledStar.addGestureRecognizer(tapGestureFilledStar)
+        
         // make sure imageView can be interacted with by user
         filledStar.userInteractionEnabled = true
     }
     
     func emptyStarTapped(gesture: UIGestureRecognizer) {
-        // if the tapped view is a UIImageView then set it to imageview
+        
         // Añadimos a favoritos
         if let emptyStar = gesture.view as? UIImageView {
-            print("Image Tapped emptyStar")
-            //Here you can initiate your new ViewController
+            
+            //Iniciamos los valores del ViewController
             emptyStar.hidden = true
             filledStar.hidden = false
             model.isFavourite = true
-//            model.saveFavourite()
             
             // Avisamos al delegado
             delegate?.bookViewController(self, didAddFavourite: model)
@@ -124,15 +127,14 @@ class BookViewController: UIViewController {
     }
 
     func filledStarTapped(gesture: UIGestureRecognizer) {
-        // if the tapped view is a UIImageView then set it to imageview
+
         // Eliminamos de favoritos
         if let filledStar = gesture.view as? UIImageView {
-            print("Image Tapped filledStar")
-            //Here you can initiate your new ViewController
+            
+            //Iniciamos los valores del ViewController
             filledStar.hidden = true
             emptyStar.hidden = false
             model.isFavourite = false
-//            model.removeFavourite()
             
             //Avisamos al delegado
             delegate?.bookViewController(self, didRemoveFavourite: model)
@@ -178,31 +180,18 @@ class BookViewController: UIViewController {
         nc.removeObserver(self)
         
     }
-    
-    
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
+//Definimos la interfaz de delagado
 protocol BookViewControllerDelegate{
     
     func bookViewController(vc: BookViewController, didAddFavourite book: Book)
     func bookViewController(vc: BookViewController, didRemoveFavourite book: Book)
     
-    
 }
 
-
+//Implementamos los metodos del delegado
 extension BookViewController: LibraryViewControllerDelegate{
     
     

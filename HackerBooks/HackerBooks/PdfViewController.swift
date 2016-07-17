@@ -15,6 +15,7 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
     @IBOutlet weak var pdfView: UIWebView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    //MARK: -initalizers
     init(model: Book){
         
         
@@ -35,21 +36,19 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
             
         }
         
-        
         pdfView.delegate = self
         activityIndicator.startAnimating()
         
         
     }
     
-    
+    // MARK: - View Data
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)  
         
         // Alta en notificación
         let nc = NSNotificationCenter.defaultCenter()
         nc.addObserver(self, selector: #selector(bookDidChange), name: BookDidChangeNotification, object: nil)
-
         
         self.synchronized()
         
@@ -67,7 +66,7 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        // Paramos el monitorActivity
         activityIndicator.stopAnimating()
     }
     
@@ -78,7 +77,7 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
         
         activityIndicator.startAnimating()
         
-        // Sacar el personaje
+        // Sacar el libro
         let book = info[BookKey] as? Book
         
         // Actualizar el modelo
@@ -100,17 +99,5 @@ class PdfViewController: UIViewController, UIWebViewDelegate {
         
         activityIndicator.hidden = true
     }
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

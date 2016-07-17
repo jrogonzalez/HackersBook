@@ -32,12 +32,19 @@ class Book{
     
     func loadImage() throws -> UIImage?{
         
-        
         //Probamos a buscarla en local
+        let localURLCache = obtainLocalCacheUrlDocumentsFile(fileForResourceName(self.image))
         let localURL = obtainLocalUrlDocumentsFile(fileForResourceName(self.image))
         
-        if let imgData = NSData(contentsOfURL: localURL),
+        //Buscamos en la cache
+        if let imgDataCache = NSData(contentsOfURL: localURLCache),
+            imageCache = UIImage(data: imgDataCache) {
+            
+            return imageCache
+            
+        }else if let imgData = NSData(contentsOfURL: localURL),
             image = UIImage(data: imgData) {
+            
             return image
             
         }else{
@@ -48,12 +55,12 @@ class Book{
                 image = UIImage(data: imgData) {
                 
                 do{
+                    try imgData.writeToURL(localURLCache, options: NSDataWritingOptions.AtomicWrite)
                     try imgData.writeToURL(localURL, options: NSDataWritingOptions.AtomicWrite)
                 }catch{
                     throw BookErrors.imageNotFound
                 }
-                return image
-                
+                return image                
             }
         }
         
@@ -61,33 +68,37 @@ class Book{
     }
     
     
-    
     func loadPdf() throws -> NSURLRequest?{
         
         //Probamos a buscarla en local
+        let localURLCache = obtainLocalCacheUrlDocumentsFile(fileForResourceName(self.pdf))
         let localURL = obtainLocalUrlDocumentsFile(fileForResourceName(self.pdf))
-        let pdfData = NSData(contentsOfURL: localURL)
         
-        if pdfData != nil{
+        
+        if NSData(contentsOfURL: localURLCache) != nil{
+            let pdfCache = NSURLRequest(URL: localURLCache)
+            
+            return pdfCache
+        }else if NSData(contentsOfURL: localURL) != nil{
             let pdf = NSURLRequest(URL: localURL)
-            print("load pdf from LOCAL")
+            
             return pdf
         }else{
             
             //Si no esta en local probamos en remoto
-            let pdfURL = NSURL(string: self.pdf)
-            
+            let pdfURL = NSURL(string: self.pdf)            
             let pdf = NSURLRequest(URL: pdfURL!)
             
             do{
                 if let pdfData = NSData(contentsOfURL: pdfURL!) {
+                    try pdfData.writeToURL(localURLCache, options: NSDataWritingOptions.AtomicWrite)
                     try pdfData.writeToURL(localURL, options: NSDataWritingOptions.AtomicWrite)
                 }
                 
             }catch{
                 throw BookErrors.imageNotFound
             }
-            print("load pdf from REMOTE")
+            
             return pdf
             
             

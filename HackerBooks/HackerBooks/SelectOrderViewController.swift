@@ -17,12 +17,9 @@ class SelectOrderViewController: UIViewController {
     @IBOutlet weak var SelectOrderButton: UISegmentedControl!
     @IBAction func selectOrder(sender: AnyObject) {
         if sender.selectedSegmentIndex == 0{
-            print("SelectOrder selected 0")
-            
             table.model.modifyOrderedAlphabetically(true)
             table.reloadTable()
         } else{
-            print("SelectOrder selected 1")
             table.model.modifyOrderedAlphabetically(false)
             table.reloadTable()
         }
@@ -55,54 +52,27 @@ class SelectOrderViewController: UIViewController {
     // MARK: - Add Subview
     func addTableControllerView(){
         
-        let segBounds = self.SelectOrderButton.bounds
-        let totalBounds = self.navigationController?.view.bounds
-        
         let ancho = CGFloat(320)
         let alto = CGFloat(650)
-//        let ancho = self.AlphaButton.bounds.size.width + self.TagButton.bounds.size.width
-//        let alto = CGFloat(700)
         
-        
-        
-        let X = segBounds.origin.x
-//        let Y = segBounds.origin.y+segBounds.size.height
-
-//        let X = CGFloat(20)
+        let X = CGFloat(0)
         let Y = CGFloat(100)
-        
-        
-        print ("ancho: \(ancho) - alto \(alto)")
         
         let position = CGPoint(x: X, y: Y)
         
-        
-        print ("X: \(X) - Y \(Y)")
-        
-        let totalSpace = CGSize(width: ancho,
+        let tamanio = CGSize(width: ancho,
                                 height: alto)
         
-        print ("position: \(position) - totalSpace \(totalSpace)")
-        
-        // Hasta aquí calculo donde dibujar la vista
-        let cgRect = CGRect(origin: position, size: totalSpace)
-        
-        print ("cgRect: \(cgRect)")
+        let area = CGRect(origin: position, size: tamanio)
 
-        let tV = UIScrollView(frame: cgRect)
+        let tableView = UIScrollView(frame: area)
 
-        // Modifico los bordes del tableView para que se ajuste bien
-        self.table.tableView.frame = tV.frame
-        self.table.tableView.bounds = tV.bounds
+        self.table.tableView.frame = tableView.frame
+        self.table.tableView.bounds = tableView.bounds
         
-        print ("frame: \(tV.frame)")
-        print ("bounds: \(tV.bounds)")
+        tableView.addSubview(self.table.tableView)
         
-        // Añado la subvista al uiview intermedio
-        tV.addSubview(self.table.tableView)
-        
-        // Inserto la vista en el uiview principal
-        self.view.addSubview(tV)
+        self.view.addSubview(tableView)
     }
     
 

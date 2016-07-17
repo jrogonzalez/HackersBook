@@ -22,8 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // crear instancia de modelo
         do{
-//            let defaults = NSUserDefaults.standardUserDefaults()
-//            defaults.setObject(nil, forKey: "JSON_Data")
             
             let chars = try readJSON()
             
@@ -33,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let model = Library(books: chars, orderedAlphabetically: ordenAlfabetico)
             
             // crear el VC
-//            let uVC = BookViewController(model: model)
             let uVC = LibraryViewController(model: model)
             
             let tVC = SelectOrderViewController(table: uVC)

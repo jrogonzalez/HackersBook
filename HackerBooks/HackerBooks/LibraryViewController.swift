@@ -23,10 +23,11 @@ class LibraryViewController: UITableViewController{
     
     
     
-    // Array de tags con todas las distintas tematcas en
+    // Array de tags con todas las distintas tematicas en
     // orden alfabetico. No puede bajo ningun concepto haber ninguno repetido
     var tags : Set<String>
     
+    //MARK: - Initializers
     init(model: Library){
         self.model = model
         self.tags = self.model.obtainSectionForLibraryDict(model.bookListTags)
@@ -41,11 +42,6 @@ class LibraryViewController: UITableViewController{
         super.viewWillAppear(true)
         
         self.title = "Hackerbooks"
-                
-//        self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.5
-//            green:0
-//            blue:0.13
-//            alpha:1];
     }
     
     // MARK: - Table View Delegate
@@ -53,9 +49,6 @@ class LibraryViewController: UITableViewController{
         
         // Averiguar cual es el personaje
         let selectedBook = book(forIndexPath: indexPath)
-        
-        // Crear un character view Controller
-        //        let charVC = CharacterViewController(model: char)
         
         // Avisar al delegado
         delegate?.libraryViewController(self, didSelectBook: selectedBook)
@@ -72,30 +65,13 @@ class LibraryViewController: UITableViewController{
 
     override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         
-        if model.bookListTags["favourite"]!.count>0{
-            if section==0{
-                view.tintColor = UIColor.redColor()
-            }
-            else{
-                view.tintColor = UIColor(red: 0.5, green: 0, blue: 0.13, alpha: 1)
-            }
-        }
-        else{
-            view.tintColor = UIColor(red: 0.5, green: 0, blue: 0.13, alpha: 1)
-        }
-        
-        
-        
-        let title = UILabel()
-        title.textColor = UIColor.whiteColor()
-        title.textAlignment = NSTextAlignment.Left
-        
-        
+        //Cambiamos el color a la celda
+        view.tintColor = UIColor(red: 0.5, green: 0, blue: 0.13, alpha: 1)
         
         let header : UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
         
-        header.textLabel?.textColor = title.textColor
-        header.textLabel?.textAlignment = title.textAlignment
+        header.textLabel?.textColor = UIColor.whiteColor()
+        header.textLabel?.textAlignment = NSTextAlignment.Left
         
     }
 
@@ -108,12 +84,12 @@ class LibraryViewController: UITableViewController{
         }
     }
 
-    // Cantidad de libros que hay en una tematica.
-    // Si el tag no existe, debe de devolver cero.
-    func bookCountForTag (tag: String?) -> Int{
-        return 0
-        
-    }
+//    // Cantidad de libros que hay en una tematica.
+//    // Si el tag no existe, debe de devolver cero.
+//    func bookCountForTag (tag: String?) -> Int{
+//        return 0
+//        
+//    }
 
     // Array de los libros (instancias de Book) que hay en una tematica
     // Un libro puede estar en una o mas tematicas. Si no hay libros por una tematica, ha de devolver nil
@@ -140,30 +116,26 @@ class LibraryViewController: UITableViewController{
             let aux = model.bookListTags[num]
             return aux
         }
-        
-        
-        return nil
     }
 
-    // Un Book para que libro que esta en la posicion 'index' de aquellos bajo un cierto tag. Mira a ver si puedes usar el metodo anterior para hacer parte de tu trabajo.
-    // Si el indice no existe o el tag no existe, ha de devolver nil
 
-    func bookAtIndex(index: Int?, row: String?) -> Book?{
-        guard let aTag = row,
-            let aIndex = index else{
-            return nil
-        }
-                
-        guard booksForTag(aTag)?.count != 0,
-            let num = booksForTag(aTag) else{
-            return nil
-        }
-        
-        return num[aIndex]
-        
-    }
+//    func bookAtIndex(index: Int?, row: String?) -> Book?{
+//        guard let aTag = row,
+//            let aIndex = index else{
+//            return nil
+//        }
+//                
+//        guard booksForTag(aTag)?.count != 0,
+//            let num = booksForTag(aTag) else{
+//            return nil
+//        }
+//        
+//        return num[aIndex]
+//        
+//    }
     
-    
+    // Un Book para que libro que esta en la posicion 'index' de aquellos bajo un cierto tag.
+    // Si el indice no existe o el tag no existe devuelve nil
     func bookAtIndex(section: Int?, row: Int?) -> Book?{
         
         //Averiaguamos de que tag es el int que nos han mandado
@@ -185,7 +157,6 @@ class LibraryViewController: UITableViewController{
     
     
     // MARK: - Table view data source
-    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // numero de tags en la libreria
         return model.tagsCount
@@ -195,12 +166,7 @@ class LibraryViewController: UITableViewController{
         //Numero de libros en un determinado tag
         let sectionName = getTag(section)
         
-        let num = model.booksCount(forTag: sectionName)
-        
-        
-//        print("section: \(section) nº books: \(num) --> \(sectionName)")
-        
-        return num
+        return model.booksCount(forTag: sectionName)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -208,14 +174,8 @@ class LibraryViewController: UITableViewController{
         // Tipo de celda
         let cellId = "BookCell"
         
-        
-//        print("section: \(indexPath.section)")
-//        print("row: \(indexPath.row)")
-        
         // Averiguar de que personaje me estan preguntando
         let theBook = book(forIndexPath: indexPath)
-//        let sectionName = getTag(indexPath.section)
-//        print("tag: \(sectionName)")
         
         // Crear la celda
         var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
@@ -225,22 +185,15 @@ class LibraryViewController: UITableViewController{
             cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellId)
         }
         
-        
         do{
             cell?.imageView?.image = try theBook.loadImage()!
         }catch{
             
         }
         
-        
-        
-        
         // Sincronizar personaje -> celda
-        
         cell?.textLabel?.text = theBook.title
         cell?.textLabel?.font = UIFont(name: "pepe", size: CGFloat(8))
-    
-//        cell?.detailTextLabel?.text = theBook.
         
         return cell!
     }
@@ -308,15 +261,6 @@ class LibraryViewController: UITableViewController{
         
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject([lastSection: "1", lastRow: "0"], forKey: lastBook)
-//        defaults.setObject(model.obtainFirstTag()!, forKey: lastRow)
-//        defaults.setInteger(0, forKey: lastSection)
-        
-//        defaults.setObject(model.book(atIndex: 0, forTag: model.obtainFirstTag()!), forKey: lastBook)
-//        defaults.setObject(model.obtainFirstTag()!, forKey: lastRow)
-//        defaults.setInteger(0, forKey: lastSection)
-        
-//        return bookAtIndex(0, tag: model.obtainFirstTag()!)
-        
         
     }
     
@@ -336,7 +280,7 @@ class LibraryViewController: UITableViewController{
 
 }
 
-
+// Definimos los metodos del delegado
 protocol LibraryViewControllerDelegate{
     
     func libraryViewController(vc: LibraryViewController, didSelectBook book: Book)
@@ -344,7 +288,7 @@ protocol LibraryViewControllerDelegate{
     
 }
 
-
+// Implementamos los metodos del delegado
 extension LibraryViewController: BookViewControllerDelegate{
     
     
